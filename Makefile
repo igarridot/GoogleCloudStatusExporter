@@ -13,3 +13,7 @@ run-local:
 
 stop-local:
 	docker rm -f  gcp-exporter
+
+create-tag:
+	git tag -a v$(version)
+	git push origin --tags

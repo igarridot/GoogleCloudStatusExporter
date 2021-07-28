@@ -33,9 +33,11 @@ for argument, value in arguments:
     manage_all_events = True
 
 def severity_handler(incident):
-  if incident['severity'] == 'high':
+  if incident['most_recent_update']['status'] != 'AVAILABLE':
+    return 0
+  elif incident['severity'] == 'high':
     return 2
-  if incident['severity'] == 'medium':
+  elif incident['severity'] == 'medium':
     return 1
 
 def add_metric(incident, metric, incident_severity, product):
