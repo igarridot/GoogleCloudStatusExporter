@@ -1,5 +1,5 @@
 app_tag_name = norbega/gcp-status-exporter
-version = 0.1.1
+version = 0.2.0
 
 build:
 	docker build \
@@ -17,3 +17,5 @@ stop-local:
 create-tag:
 	git tag -a v$(version)
 	git push origin --tags
+
+.PHONY: build push run-local stop-local create-tag
