@@ -2,7 +2,7 @@ import requests
 import unittest
 import json
 from unittest import mock
-from src.main import *
+from src.main import GCPStatusCollector 
 
 with open('test/fixtures/small.json') as fixture:
     single_issue_fixture = json.load(fixture)
