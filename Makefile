@@ -1,5 +1,5 @@
 app_tag_name = norbega/gcp-status-exporter
-version = 0.3.0
+version = 0.3.1
 
 build:
 	docker build \

@@ -32,7 +32,7 @@ class GCPStatusCollectorTestCase(unittest.TestCase):
         for item in iterator:
             alerts.append(item)
         self.assertEqual(str(
-            alerts[0]), "Metric(gcp_incidents, GCP Incident last update status, gauge, , [Sample(name='gcp_incidents', labels={'id': 'MfiGCW4E26MPGRnCJ8by', 'status': 'SERVICE_DISRUPTION', 'product': 'Google Cloud Storage', 'description': 'us-central1: GCS is returning stale version of object for bucket', 'uri': 'incidents/MfiGCW4E26MPGRnCJ8by'}, value=0, timestamp=None, exemplar=None)])")
+            alerts[0]), "Metric(gcp_incidents, GCP Incident last update status, gauge, , [Sample(name='gcp_incidents', labels={'id': 'MfiGCW4E26MPGRnCJ8by', 'status': 'SERVICE_DISRUPTION', 'product': 'Google Cloud Storage', 'description': 'us-central1: GCS is returning stale version of object for bucket', 'uri': 'incidents/MfiGCW4E26MPGRnCJ8by'}, value=2, timestamp=None, exemplar=None)])")
 
 
 if __name__ == '__main__':
