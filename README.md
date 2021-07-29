@@ -53,7 +53,7 @@ All the parameters can be introduced via environment variable or command argumen
 | -d   | --debug_mode  | DEBUG |  | Boolean. Using the parameter without value will set is as True automatically |
 | -z   | --zones | ZONES | | List of strings separated by space |
 | -P   | --products | PRODUCTS | | List of strings separated by space |
-| -a   | --manage_all_events | INCLUDE_RESOLVED | False | Boolean. Using the parameter without value will set is as True automatically |
+| -a   | --manage_all_events | MANAGE_ALL_EVENTS | False | Boolean. Using the parameter without value will set is as True automatically |
 
 ## Docker deployment
 
