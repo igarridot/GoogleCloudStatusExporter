@@ -31,7 +31,7 @@ gcp_incidents{description="We are experiencing an issue with Cloud AI in us-cent
 
  
 ## Labels
-Labels are key. Each label will store the basic incident information:
+Each label will store the basic incident information:
 
 | Label Name    | Value                       |
 | ------------- |:---------------------------:|
@@ -50,7 +50,7 @@ All the parameters can be introduced via environment variable or command argumen
 | -------------------|:------------------------:|:-----:|:-----:|:-----:|
 | -e   | --gcp_status_endpoint | GCP_STATUS_ENDPOINT | https://status.cloud.google.com/incidents.json | URI as string |
 | -p   | --listen_port | LISTEN_PORT | 9118 | integer |
-| -d   | --debug_mode  | DEBUG |  | Boolean. Using the parameter without value will set is as True automatically |
+| -d   | --debug_mode  | DEBUG | False | Boolean. Using the parameter without value will set is as True automatically |
 | -z   | --zones | ZONES | | List of strings separated by space |
 | -P   | --products | PRODUCTS | | List of strings separated by space |
 | -a   | --manage_all_events | MANAGE_ALL_EVENTS | False | Boolean. Using the parameter without value will set is as True automatically |
@@ -77,5 +77,5 @@ Otherwise, the image is available in [Docker Hub](https://hub.docker.com/reposit
 - Create Grafana dashboard
 - Create suggested alerts
 
-## References
+## Referencies
 - Magnificent [Robustperception Blog](https://www.robustperception.io)
