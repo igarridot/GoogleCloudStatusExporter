@@ -63,6 +63,12 @@ You can build the image running the following target:
 make build
 ```
 
+Example docker entrypoint:
+
+```
+python main.py -e 'https://status.cloud.google.com/incidents.json' -p 9118 --products 'Google Cloud Datastore' 'Google Cloud DNS' -z 'europe-west1' 'europe-west4'
+```
+
 Otherwise, the image is available in [Docker Hub](https://hub.docker.com/repository/docker/norbega/gcp-status-exporter)
 
 ## Future work
