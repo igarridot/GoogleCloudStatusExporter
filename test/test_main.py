@@ -26,7 +26,7 @@ class GCPStatusCollectorTestCase(unittest.TestCase):
     @mock.patch('src.main.requests.get', side_effect=mocked_request_handler)
     @mock.patch('src.main.print', side_effect='Mocked')
     def test_inuque_incident(self, mock_get, mock_get2):
-        exporter = GCPStatusCollector('', '', '', '', False)
+        exporter = GCPStatusCollector('', '', '', False)
         iterator = exporter.collect()
         alerts = []
         for item in iterator:

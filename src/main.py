@@ -52,16 +52,15 @@ def parse_args():
         required=False,
         action='store_true',
         help='Monitor also resolved issues',
-        default=os.environ.get('ZONES', '')
+        default=os.environ.get('MANAGE_ALL_EVENTS', '')
     )
     return parser.parse_args()
 
 
 class GCPStatusCollector(object):
 
-    def __init__(self, gcp_status_endpoint, debug_mode, products, zones, manage_all_events):
+    def __init__(self, gcp_status_endpoint, products, zones, manage_all_events):
         self.gcp_status_endpoint = gcp_status_endpoint
-        self.debug_mode = debug_mode
         self.products = products
         self.zones = zones
         if len(self.zones) > 0:
@@ -128,11 +127,11 @@ def main():
         if not args.debug_mode:
             for coll in list(REGISTRY._collector_to_names.keys()):
                 REGISTRY.unregister(coll)
-            REGISTRY.register(GCPStatusCollector(args.gcp_status_endpoint,
-                              args.debug_mode, args.products, args.zones, args.manage_all_events))
-            start_http_server(args.listen_port)
-            while True:
-                time.sleep(1)
+        REGISTRY.register(GCPStatusCollector(args.gcp_status_endpoint,
+                          args.products, args.zones, args.manage_all_events))
+        start_http_server(args.listen_port)
+        while True:
+            time.sleep(1)
     except KeyboardInterrupt:
         print(" Interrupted")
         exit(0)
