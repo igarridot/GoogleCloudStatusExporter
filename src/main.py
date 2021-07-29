@@ -41,7 +41,7 @@ def severity_handler(incident):
     return 1
 
 def add_metric(incident, metric, incident_severity, product):
-      metric.add_metric([incident['id'], incident['most_recent_update']['status'], product['title'], incident['external_desc'], incident['most_recent_update']['text']], incident_severity)
+      metric.add_metric([incident['id'], incident['most_recent_update']['status'], product['title'], incident['external_desc'], gcp_status_endpoint.removesuffix('incidents.json')+incident['uri']], incident_severity)
 
 def metric_handler(incident, metric, incident_severity):
   for product in incident['affected_products']:
@@ -65,7 +65,7 @@ class GCPStatusCollector(object):
     metric = GaugeMetricFamily(
         'gcp_incidents',
         'GCP Incident last update status',
-        labels=['id', 'status', 'product', 'description', 'action'])
+        labels=['id', 'status', 'product', 'description', 'uri'])
 
     resp = requests.get(url=gcp_status_endpoint)
     data = resp.json()
