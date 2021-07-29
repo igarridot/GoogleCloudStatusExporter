@@ -59,9 +59,8 @@ def parse_args():
 
 class GCPStatusCollector(object):
 
-    def __init__(self, gcp_status_endpoint, listen_port, debug_mode, products, zones, manage_all_events):
+    def __init__(self, gcp_status_endpoint, debug_mode, products, zones, manage_all_events):
         self.gcp_status_endpoint = gcp_status_endpoint
-        self.listen_port = listen_port
         self.debug_mode = debug_mode
         self.products = products
         self.zones = zones
@@ -75,10 +74,7 @@ class GCPStatusCollector(object):
             'GCP Incident last update status',
             labels=['id', 'status', 'product', 'description', 'uri'])
 
-        print("Polling {}".format(self.gcp_status_endpoint))
-        resp = requests.get(url=self.gcp_status_endpoint)
-        print("GCP Incident status response code: {}".format(resp.status_code))
-        data = resp.json()
+        data = self.request_handler()
 
         for incident in data:
             if not self.manage_all_events:
@@ -88,6 +84,12 @@ class GCPStatusCollector(object):
                 self.incident_handler(incident, metric)
 
         yield metric
+
+    def request_handler(self):
+        print("Polling {}".format(self.gcp_status_endpoint))
+        resp = requests.get(url=self.gcp_status_endpoint)
+        print("GCP Incident status response code: {}".format(resp.status_code))
+        return resp.json()
 
     def severity_handler(self, incident):
         if incident['most_recent_update']['status'] != 'AVAILABLE':
@@ -126,7 +128,7 @@ def main():
         if not args.debug_mode:
             for coll in list(REGISTRY._collector_to_names.keys()):
                 REGISTRY.unregister(coll)
-            REGISTRY.register(GCPStatusCollector(args.gcp_status_endpoint, args.listen_port,
+            REGISTRY.register(GCPStatusCollector(args.gcp_status_endpoint,
                               args.debug_mode, args.products, args.zones, args.manage_all_events))
             start_http_server(args.listen_port)
             while True:
