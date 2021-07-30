@@ -1,0 +1,35 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: gcp-exporter
+  namespace: lens-metrics
+spec:
+  selector:
+    matchLabels:
+      app: gcp-exporter
+  template:
+    metadata:
+      labels:
+        app: gcp-exporter
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/path: "/metrics"
+        prometheus.io/port: "9118"
+    spec:
+      containers:
+      - name: application
+        image: norbega/gcp-status-exporter:v1.0.0
+        resources:
+          limits:
+            memory: "128Mi"
+            cpu: "100m"
+        command:
+          - '/bin/sh'
+        args:
+          - '-c'
+          - 'python /src/main.py -a'
+        env:
+          - name: PYTHONUNBUFFERED
+            value: "True"
+        ports:
+        - containerPort: 9118
