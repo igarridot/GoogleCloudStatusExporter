@@ -132,9 +132,11 @@ def main():
         if args.debug_mode:
             print("ENDPOINNT: ", args.gcp_status_endpoint)
             print("PORT: ", type(args.debug_mode), args.debug_mode)
-            print("PRODUCTS: ", type(args.products), len(args.products), args.products)
+            print("PRODUCTS: ", type(args.products),
+                  len(args.products), args.products)
             print("ZONES: ", type(args.zones), len(args.zones), args.products)
-            print("EVENTS: ", type(args.manage_all_events), args.manage_all_events)
+            print("EVENTS: ", type(args.manage_all_events),
+                  args.manage_all_events)
 
         if not args.debug_mode:
             for coll in list(REGISTRY._collector_to_names.keys()):
