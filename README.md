@@ -46,14 +46,27 @@ Each label will store the basic incident information:
 
 All the parameters can be introduced via environment variable or command argument. Command arguments have higher priority than environment variables:
 
-| Short parameter    | Long Parameter           |  Environment variable name | Default Value | Format |
-| -------------------|:------------------------:|:-----:|:-----:|:-----:|
-| -e   | --gcp_status_endpoint | GCP_STATUS_ENDPOINT | https://status.cloud.google.com/incidents.json | URI as string |
-| -p   | --listen_port | LISTEN_PORT | 9118 | integer |
-| -d   | --debug_mode  | DEBUG | False | Boolean. Using the parameter without value will set is as True automatically |
-| -z   | --zones | ZONES | | List of strings separated by space |
-| -P   | --products | PRODUCTS | | List of strings separated by space |
-| -a   | --manage_all_events | MANAGE_ALL_EVENTS | False | Boolean. Using the parameter without value will set is as True automatically |
+### Environment Variables
+
+| Env Var Name         | Value Format                                |  Default Value  | Example                                                              |
+| --------------------:|:-------------------------------------------:|:---------------:|:--------------------------------------------------------------------:|
+| GCP_STATUS_ENDPOINT  | String       | https://status.cloud.google.com/incidents.json | ```GCP_STATUS_ENDPOINT='https://status.cloud.google.com/incidents.json'```|
+| LISTEN_PORT          | Integer      | 9118                                           | ```LISTEN_PORT=9118```                                                     |
+| DEBUG                | Boolean      | False                                          | ```DEBUG=True```                                                           |
+| PRODUCTS             | Comma separated values inside single string |                 | ```PRODUCTS='Healthcare and Life Sciences,Cloud Machine Learning'```       |
+| ZONES                | Comma separated values inside single string |                 | ```ZONES='us-central1,asia-east2'```                                       |
+| MANAGE_ALL_EVENTS    | Boolean      | False                                          | ```MANAGE_ALL_EVENTS=True```
+
+### Entrypoint parameters
+
+| Short Param Name | Long Param Name        |  Default Value                 | Example                                                              |
+| ----------------:|:----------------------:|:------------------------------:|:--------------------------------------------------------------------:|
+| -e               | --gcp_status_endpoint  | https://status.cloud.google.com/incidents.json | ```--gcp_status_endpoint 'https://status.cloud.google.com/incidents.json'``` |
+| -p               | --listen_port          | 9118                           | ```--listen_port 9118```                                                   |
+| -d               | --debug_mode           | False                          |```--debug_mode```                                                         |
+| -P               | --products             |      | ```--products 'Healthcare and Life Sciences' 'Cloud Machine Learning'```                             |
+| -z               | --zones                |      | ```--zones 'asia-east2' 'Multi-Region'```                                                            |
+| -a               | --manage_all_events    | False | ```--manage_all_events```
 
 ## Docker deployment
 
@@ -73,7 +86,6 @@ Otherwise, the image is available in [Docker Hub](https://hub.docker.com/reposit
 
 ## Future work
 - Extend documentation to detail how to use the application without Docker
-- Add more tests
 - Create Grafana dashboard
 - Create suggested alerts
 
