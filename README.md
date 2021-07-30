@@ -43,11 +43,10 @@ Each label will store the basic incident information:
 
 
 ## Configuration 
-
 All the parameters can be introduced via environment variable or command argument. Command arguments have higher priority than environment variables:
 
-### Environment Variables
 
+### Environment Variables
 | Env Var Name         | Value Format                                |  Default Value  | Example                                                              |
 | --------------------:|:-------------------------------------------:|:---------------:|:--------------------------------------------------------------------:|
 | GCP_STATUS_ENDPOINT  | String       | https://status.cloud.google.com/incidents.json | ```GCP_STATUS_ENDPOINT='https://status.cloud.google.com/incidents.json'```|
@@ -57,8 +56,8 @@ All the parameters can be introduced via environment variable or command argumen
 | ZONES                | Comma separated values inside single string |                 | ```ZONES='us-central1,asia-east2'```                                       |
 | MANAGE_ALL_EVENTS    | Boolean      | False                                          | ```MANAGE_ALL_EVENTS=True```
 
-### Entrypoint parameters
 
+### Entrypoint parameters
 | Short Param Name | Long Param Name        |  Default Value                 | Example                                                              |
 | ----------------:|:----------------------:|:------------------------------:|:--------------------------------------------------------------------:|
 | -e               | --gcp_status_endpoint  | https://status.cloud.google.com/incidents.json | ```--gcp_status_endpoint 'https://status.cloud.google.com/incidents.json'``` |
@@ -68,26 +67,38 @@ All the parameters can be introduced via environment variable or command argumen
 | -z               | --zones                |      | ```--zones 'asia-east2' 'Multi-Region'```                                                            |
 | -a               | --manage_all_events    | False | ```--manage_all_events```
 
-## Docker deployment
-
+## Deploy image
 You can build the image running the following target:
 
 ```
 make build
 ```
 
-Example docker entrypoint:
+Otherwise, the image is available in [Docker Hub](https://hub.docker.com/repository/docker/norbega/gcp-status-exporter)
+
+## Usage outside of containers
+
+*Not tested in Python 2.7*
+- Install project requirements:
+
+```
+pip install -r src/requirements.txt
+```
+
+- Run the application:
+
+```
+python main.py
+```
+
+- Example with parameters:
 
 ```
 python main.py -e 'https://status.cloud.google.com/incidents.json' -p 9118 --products 'Google Cloud Datastore' 'Google Cloud DNS' -z 'europe-west1' 'europe-west4'
 ```
 
-Otherwise, the image is available in [Docker Hub](https://hub.docker.com/repository/docker/norbega/gcp-status-exporter)
-
 ## Future work
-- Extend documentation to detail how to use the application without Docker
 - Create Grafana dashboard
-- Create suggested alerts
 
 ## Referencies
 - Magnificent [Robustperception Blog](https://www.robustperception.io)
