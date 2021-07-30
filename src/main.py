@@ -24,7 +24,7 @@ def parse_args():
         type=int,
         required=False,
         help='Exporter listen port',
-        default=int(os.environ.get('LISTEN_PORT', '9118'))
+        default=int(os.environ.get('LISTEN_PORT', 9118))
     )
     parser.add_argument(
         '-d', '--debug_mode',
