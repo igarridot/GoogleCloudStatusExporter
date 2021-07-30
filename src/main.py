@@ -31,28 +31,28 @@ def parse_args():
         required=False,
         action='store_true',
         help='Enable debug mode',
-        default=os.environ.get('DEBUG', False)
+        default=bool(os.environ.get('DEBUG', False))
     )
     parser.add_argument(
         '-P', '--products',
         required=False,
         nargs="+",
         help='Products to monitor',
-        default=os.environ.get('SERVICES', '')
+        default=os.environ.get('PRODUCTS', [])
     )
     parser.add_argument(
         '-z', '--zones',
         required=False,
         nargs="+",
         help='Geo zones to monitor',
-        default=os.environ.get('ZONES', '')
+        default=os.environ.get('ZONES', [])
     )
     parser.add_argument(
         '-a', '--manage_all_events',
         required=False,
         action='store_true',
         help='Monitor also resolved issues',
-        default=os.environ.get('MANAGE_ALL_EVENTS', '')
+        default=os.environ.get('MANAGE_ALL_EVENTS', False)
     )
     return parser.parse_args()
 
@@ -63,7 +63,7 @@ class GCPStatusCollector(object):
         self.gcp_status_endpoint = gcp_status_endpoint
         self.products = products
         self.zones = zones
-        if len(self.zones) > 0:
+        if self.zones:
             self.zones.extend(['Global', 'global'])
         self.manage_all_events = manage_all_events
 
@@ -100,7 +100,7 @@ class GCPStatusCollector(object):
 
     def incident_handler(self, incident, metric):
         incident_severity = self.severity_handler(incident)
-        if len(self.zones) > 0:
+        if self.zones:
             for zone in self.zones:
                 if zone in incident['external_desc']:
                     self.metric_handler(incident, metric, incident_severity)
@@ -109,7 +109,7 @@ class GCPStatusCollector(object):
 
     def metric_handler(self, incident, metric, incident_severity):
         for product in incident['affected_products']:
-            if len(self.products) > 0:
+            if self.products:
                 if product['title'] in self.products:
                     self.add_metric(incident, metric,
                                     incident_severity, product)
@@ -124,6 +124,20 @@ class GCPStatusCollector(object):
 def main():
     try:
         args = parse_args()
+        if type(args.zones) == str:
+            args.zones = args.zones.split(",")
+        if type(args.products) == str:
+            args.products = args.products.split(",")
+
+        if args.debug_mode:
+            print("ENDPOINNT: ", args.gcp_status_endpoint)
+            print("PORT: ", type(args.debug_mode), args.debug_mode)
+            print("PRODUCTS: ", type(args.products),
+                  len(args.products), args.products)
+            print("ZONES: ", type(args.zones), len(args.zones), args.products)
+            print("EVENTS: ", type(args.manage_all_events),
+                  args.manage_all_events)
+
         if not args.debug_mode:
             for coll in list(REGISTRY._collector_to_names.keys()):
                 REGISTRY.unregister(coll)
