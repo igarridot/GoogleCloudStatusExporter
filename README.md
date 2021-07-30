@@ -24,7 +24,7 @@ This Prometheus only returns one metric called ```gcp_incidents``` and the value
 Example metrics:
 
 ```
-cp_incidents{description="Queries fail with RESOURCE_EXCEEDED",id="EdoHcVkqXbPQmz3qYtqb",product="Google BigQuery",status="SERVICE_DISRUPTION",uri="https://status.cloud.google.com/incidents/EdoHcVkqXbPQmz3qYtqb"} 1.0
+gcp_incidents{description="Queries fail with RESOURCE_EXCEEDED",id="EdoHcVkqXbPQmz3qYtqb",product="Google BigQuery",status="SERVICE_DISRUPTION",uri="https://status.cloud.google.com/incidents/EdoHcVkqXbPQmz3qYtqb"} 1.0
 
 gcp_incidents{description="We are experiencing an issue with Cloud AI in us-central1 starting at 12:13 US/Pacific.",id="UK3LcXtsL7sW9g8TZkJM",product="Cloud Machine Learning",status="SERVICE_DISRUPTION",uri="https://status.cloud.google.com/incidents/UK3LcXtsL7sW9g8TZkJM"} 1.0
 ```
