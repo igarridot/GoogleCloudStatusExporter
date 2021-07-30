@@ -61,8 +61,8 @@ class GCPStatusCollector(object):
 
     def __init__(self, gcp_status_endpoint, products, zones, manage_all_events):
         self.gcp_status_endpoint = gcp_status_endpoint
-        self.products = products
-        self.zones = zones
+        self.products = list(products.split(","))
+        self.zones = list(zones.split(","))
         if len(self.zones) > 0:
             self.zones.extend(['Global', 'global'])
         self.manage_all_events = manage_all_events
