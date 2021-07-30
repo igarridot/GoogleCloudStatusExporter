@@ -75,7 +75,7 @@ All the parameters can be introduced via environment variable or command argumen
 
 ---------------------------------
 
-## Deploy image
+## Build image
 You can build the image running the following target:
 
 ```
