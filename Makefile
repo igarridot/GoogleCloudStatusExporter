@@ -1,5 +1,5 @@
 app_tag_name = norbega/gcp-status-exporter
-version = 0.3.3
+version = 1.0.0
 
 build:
 	docker build \
@@ -12,7 +12,7 @@ install-test-requirements:
 	pip install -r src/requirements.txt
 
 tests:
-	python -m unittest test.test_main
+	python -m unittest -vvv test.test_main
 
 run-local:
 	docker run -d --name gcp-exporter -p '9118:9118' $(app_tag_name):$(version)
