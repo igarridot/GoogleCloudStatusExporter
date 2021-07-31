@@ -11,7 +11,7 @@ Is not guaranteed that "Zones" filter flag works as expected. Google used to men
 ---------------------------------
 
 ## Key features
-- Allows you to filter issues based on GCP [product names](https://status.cloud.google.com)(left column)
+- Allows you to filter issues based on GCP [product names](https://status.cloud.google.com) (left column)
 - Allows you to filter issues based on alert [geographical zones](https://cloud.google.com/docs/geography-and-regions#internal_services).
 - Allows you to filter by only firing alerts or by all alerts including the resolved ones.
 - The timeseries has a value based on the alert severity.
