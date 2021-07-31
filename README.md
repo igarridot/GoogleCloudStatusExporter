@@ -14,6 +14,7 @@ Is not guaranteed that "Zones" filter flag works as expected. Google used to men
 - Allows you to filter issues based on GCP [product names](https://status.cloud.google.com) (left column)
 - Allows you to filter issues based on alert [geographical zones](https://cloud.google.com/docs/geography-and-regions#internal_services).
 - Allows you to filter by only firing alerts or by all alerts including the resolved ones.
+- You can store last incident status as a label content if you need it.
 - The timeseries has a value based on the alert severity.
 
 ---------------------------------
@@ -32,18 +33,24 @@ gcp_incidents{description="Queries fail with RESOURCE_EXCEEDED",id="EdoHcVkqXbPQ
 gcp_incidents{description="We are experiencing an issue with Cloud AI in us-central1 starting at 12:13 US/Pacific.",id="UK3LcXtsL7sW9g8TZkJM",product="Cloud Machine Learning",status="SERVICE_DISRUPTION",uri="https://status.cloud.google.com/incidents/UK3LcXtsL7sW9g8TZkJM"} 1.0
 ```
 
+Example metric including last_update label:
+
+```
+gcp_incidents{description="An issue with Cloud Healthcare API in asia-east2 has been resolved",id="w1sMLXwN9R3NK46UEZAx",last_update="Cloud Healthcare API has been affected in the asia-east2 region by the Google incident https://status.cloud.google.com/incident/zall/20009 since 2020-09-17 17:02 US/Pacific. The issue was resolved for all projects as of Thursday, 2020-09-17 18:38 US/Pacific.\nWe thank you for your patience while we worked on resolving the issue.",product="Healthcare and Life Sciences",status="SERVICE_DISRUPTION",uri="https://status.cloud.google.com/incidents/w1sMLXwN9R3NK46UEZAx"} 1.0
+```
+
 ---------------------------------
 
 ## Labels
 Each label will store the basic incident information:
 
-| Label Name    | Value                       |
-| ------------- |:---------------------------:|
-| description   | brief alert description     |
-| id            | unique issue identifier     |
-| product       | affected product name       |
-| status        | status of the incident      |
-| uri           | Link to GCP incident page   |
+| Label Name    | Value                       | Label Type |
+| ------------- |:---------------------------:|:----------:|
+| description   | brief alert description     | base       |
+| id            | unique issue identifier     | base       |
+| product       | affected product name       | base       |
+| status        | status of the incident      | base       |
+| uri           | Link to GCP incident page   | optional   |
 
 
 ---------------------------------
@@ -61,7 +68,7 @@ All the parameters can be introduced via environment variable or command argumen
 | PRODUCTS             | Comma separated values inside single string |                 | ```PRODUCTS='Healthcare and Life Sciences,Cloud Machine Learning'```       |
 | ZONES                | Comma separated values inside single string |                 | ```ZONES='us-central1,asia-east2'```                                       |
 | MANAGE_ALL_EVENTS    | Boolean      | False                                          | ```MANAGE_ALL_EVENTS=True```
-
+| LAST_UPDATE          | Boolean      | False                                          | ```LAST_UPDATE=True``` |
 
 ### Entrypoint parameters
 | Short Param Name | Long Param Name        |  Default Value                 | Example                                                              |
@@ -72,7 +79,7 @@ All the parameters can be introduced via environment variable or command argumen
 | -P               | --products             |      | ```--products 'Healthcare and Life Sciences' 'Cloud Machine Learning'```                             |
 | -z               | --zones                |      | ```--zones 'asia-east2' 'Multi-Region'```                                                            |
 | -a               | --manage_all_events    | False | ```--manage_all_events```
-
+| -u               | --last_update          | False | ```--last_update``` |
 ---------------------------------
 
 ## Build image
