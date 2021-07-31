@@ -54,24 +54,33 @@ def parse_args():
         help='Monitor also resolved issues',
         default=os.environ.get('MANAGE_ALL_EVENTS', False)
     )
+    parser.add_argument(
+        '-u', '--last_update',
+        required=False,
+        action='store_true',
+        help='Add extra label with last update information',
+        default=os.environ.get('LAST_UPDATE', False)
+    )
     return parser.parse_args()
 
 
 class GCPStatusCollector(object):
 
-    def __init__(self, gcp_status_endpoint, products, zones, manage_all_events):
+    def __init__(self, gcp_status_endpoint, products, zones, manage_all_events, last_update):
         self.gcp_status_endpoint = gcp_status_endpoint
         self.products = products
         self.zones = zones
         if self.zones:
             self.zones.extend(['Global', 'global'])
         self.manage_all_events = manage_all_events
+        self.last_update = last_update
 
     def collect(self):
+        
         metric = GaugeMetricFamily(
             'gcp_incidents',
             'GCP Incident last update status',
-            labels=['id', 'status', 'product', 'description', 'uri'])
+            labels=['id', 'status', 'product', 'description', 'uri', 'last_update'])
 
         data = self.request_handler()
 
@@ -117,8 +126,12 @@ class GCPStatusCollector(object):
                 self.add_metric(incident, metric, incident_severity, product)
 
     def add_metric(self, incident, metric, incident_severity, product):
-        metric.add_metric([incident['id'], incident['most_recent_update']['status'], product['title'], incident['external_desc'],
-                          self.gcp_status_endpoint.removesuffix('incidents.json')+incident['uri']], incident_severity)
+        if self.last_update:
+            metric.add_metric([incident['id'], incident['most_recent_update']['status'], product['title'], incident['external_desc'],
+                            self.gcp_status_endpoint.removesuffix('incidents.json')+incident['uri'], incident['most_recent_update']['text']], incident_severity)
+        else:
+            metric.add_metric([incident['id'], incident['most_recent_update']['status'], product['title'], incident['external_desc'],
+                            self.gcp_status_endpoint.removesuffix('incidents.json')+incident['uri']], incident_severity)
 
 
 def main():
@@ -137,12 +150,13 @@ def main():
             print("ZONES: ", type(args.zones), len(args.zones), args.products)
             print("EVENTS: ", type(args.manage_all_events),
                   args.manage_all_events)
+            print("UPDATE: ", type(args.last_update), args.last_update)
 
         if not args.debug_mode:
             for coll in list(REGISTRY._collector_to_names.keys()):
                 REGISTRY.unregister(coll)
         REGISTRY.register(GCPStatusCollector(args.gcp_status_endpoint,
-                          args.products, args.zones, args.manage_all_events))
+                          args.products, args.zones, args.manage_all_events, args.last_update))
         start_http_server(args.listen_port)
         while True:
             time.sleep(1)

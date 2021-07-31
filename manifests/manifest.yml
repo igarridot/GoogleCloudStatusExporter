@@ -18,7 +18,7 @@ spec:
     spec:
       containers:
       - name: application
-        image: norbega/gcp-status-exporter:v1.0.0
+        image: norbega/gcp-status-exporter:v1.1.0
         resources:
           limits:
             memory: "64Mi"
@@ -29,6 +29,8 @@ spec:
           - name: MANAGE_ALL_EVENTS 
             value: "True"
           - name: DEBUG
+            value: "True"
+          - name: LAST_UPDATE
             value: "True"
         ports:
         - containerPort: 9118
