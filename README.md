@@ -109,8 +109,12 @@ python main.py -e 'https://status.cloud.google.com/incidents.json' -p 9118 --pro
 
 ---------------------------------
 
-## Future work
-- Create Grafana dashboard
+## Grafana Dashboard
+
+Grafana directory contains a Dashboard JSON file that looks like this:
+
+![Captura de pantalla 2021-07-31 a las 11 56 48](https://user-images.githubusercontent.com/33375539/127736641-3196be0e-87b5-40fa-92dd-11d9b569e894.png)
+
 
 ---------------------------------
 
