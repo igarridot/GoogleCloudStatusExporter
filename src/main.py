@@ -147,7 +147,7 @@ def main():
             print("PORT: ", type(args.debug_mode), args.debug_mode)
             print("PRODUCTS: ", type(args.products),
                   len(args.products), args.products)
-            print("ZONES: ", type(args.zones), len(args.zones), args.products)
+            print("ZONES: ", type(args.zones), len(args.zones), args.zones)
             print("EVENTS: ", type(args.manage_all_events),
                   args.manage_all_events)
             print("UPDATE: ", type(args.last_update), args.last_update)
