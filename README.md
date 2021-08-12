@@ -1,4 +1,4 @@
-# GoogleCloudStatusExporter
+# Google Cloud Status Exporter
 Simple exporter to monitor Google Cloud Platform issues in Prometheus format.
 
 ## Disclaimer
