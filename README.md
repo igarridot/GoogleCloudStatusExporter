@@ -50,7 +50,8 @@ Each label will store the basic incident information:
 | id            | unique issue identifier     | base       |
 | product       | affected product name       | base       |
 | status        | status of the incident      | base       |
-| uri           | Link to GCP incident page   | optional   |
+| uri           | Link to GCP incident page   | base       |
+| last_update   | Last incident update text   | optional   |
 
 
 ---------------------------------
