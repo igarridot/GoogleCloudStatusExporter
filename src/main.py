@@ -86,7 +86,7 @@ class GCPStatusCollector(object):
 
         for incident in data:
             if not self.manage_all_events:
-                if incident['most_recent_update']['status'] != 'AVAILABLE':
+                if incident['most_recent_update']['status'] != 'AVAILABLE' and not 'end' in incident:
                     self.incident_handler(incident, metric)
             else:
                 self.incident_handler(incident, metric)
@@ -100,7 +100,7 @@ class GCPStatusCollector(object):
         return resp.json()
 
     def severity_handler(self, incident):
-        if incident['most_recent_update']['status'] == 'AVAILABLE':
+        if incident['most_recent_update']['status'] == 'AVAILABLE' or 'end' in incident:
             return 0
         elif incident['severity'] == 'high':
             return 2

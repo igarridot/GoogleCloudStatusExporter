@@ -1,5 +1,5 @@
 app_tag_name = norbega/gcp-status-exporter
-version = v1.1.1
+version = v1.1.2
 
 build:
 	docker build \
@@ -15,7 +15,7 @@ tests:
 	python -m unittest -vvv test.test_main
 
 run-local:
-	docker run -d --name gcp-exporter -p '9118:9118' $(app_tag_name):$(version)
+	docker run -d --name gcp-exporter -p '9118:9118' -e MANAGE_ALL_EVENTS=True $(app_tag_name):$(version)
 
 bash-local:
 	docker exec -ti gcp-exporter sh
