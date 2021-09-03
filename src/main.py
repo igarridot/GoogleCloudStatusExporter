@@ -100,7 +100,7 @@ class GCPStatusCollector(object):
         return resp.json()
 
     def severity_handler(self, incident):
-        if incident['most_recent_update']['status'] == 'AVAILABLE':
+        if incident['most_recent_update']['status'] == 'AVAILABLE' or 'end' in incident:
             return 0
         elif incident['severity'] == 'high':
             return 2
