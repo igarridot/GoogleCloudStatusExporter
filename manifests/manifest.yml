@@ -18,7 +18,7 @@ spec:
     spec:
       containers:
       - name: application
-        image: norbega/gcp-status-exporter:v1.1.0
+        image: norbega/gcp-status-exporter:v1.1.2
         resources:
           limits:
             memory: "64Mi"
