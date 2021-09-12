@@ -26,7 +26,7 @@ tests:
 	cd src && go test
 
 run-local:
-	docker run -d --name gcp-exporter -p '9118:9118' $(tag_name)$(PROJECT):$(VERSION) '--exporter.collect-resolved-incidents'
+	docker run -d --name gcp-exporter -p '9118:9118' $(tag_name)$(PROJECT):$(VERSION) '--exporter.collect-resolved-incidents' '--exporter.save-last-update'
 
 stop-local:
 	docker rm -f  gcp-exporter

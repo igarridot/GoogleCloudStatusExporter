@@ -86,7 +86,7 @@ func (collector *gcpStatusCollector) ProductHandler(ch chan<- prometheus.Metric,
 func (collector *gcpStatusCollector) AddMetric(ch chan<- prometheus.Metric, gcpIncident incident, incidentSeverity float64, affectedProduct product) {
 	_, saveLastUpdate := os.LookupEnv("SAVE_LAST_UPDATE")
 	if saveLastUpdate {
-		ch <- prometheus.MustNewConstMetric(collector.gcpStatus, prometheus.GaugeValue, incidentSeverity, gcpIncident.IncidentId, gcpIncident.MostRecentUpdate.Status, affectedProduct.Title, gcpIncident.ExternalDescription, gcpIncident.URI, gcpIncident.MostRecentUpdate.Status)
+		ch <- prometheus.MustNewConstMetric(collector.gcpStatus, prometheus.GaugeValue, incidentSeverity, gcpIncident.IncidentId, gcpIncident.MostRecentUpdate.Status, affectedProduct.Title, gcpIncident.ExternalDescription, "https://status.cloud.google.com/"+gcpIncident.URI, gcpIncident.MostRecentUpdate.Status)
 	} else {
 		ch <- prometheus.MustNewConstMetric(collector.gcpStatus, prometheus.GaugeValue, incidentSeverity, gcpIncident.IncidentId, gcpIncident.MostRecentUpdate.Status, affectedProduct.Title, gcpIncident.ExternalDescription, "https://status.cloud.google.com/"+gcpIncident.URI)
 	}
