@@ -94,7 +94,7 @@ Otherwise, the image is available in [Docker Hub](https://hub.docker.com/layers/
 - Example with parameters:
 
 ```
-./gcp-status-exporter-osx --web.listen-address ":9119" --web.metrics-path "/metrics" --exporter.save-last-update --exporter.collect-resolved-incidents --exporter.incidents-zones "europe-west2,multizone" --exporter.filtered-products "Google Cloud Datastore,Google Cloud DNS"
+./gcp-status-exporter-linux --web.listen-address ":9119" --web.metrics-path "/metrics" --exporter.save-last-update --exporter.collect-resolved-incidents --exporter.incidents-zones "europe-west2,multizone" --exporter.filtered-products "Google Cloud Datastore,Google Cloud DNS"
 ```
 
 ---------------------------------
