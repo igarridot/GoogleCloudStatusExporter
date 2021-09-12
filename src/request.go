@@ -3,6 +3,7 @@ package main
 import (
 	"encoding/json"
 	"errors"
+	"fmt"
 	"io/ioutil"
 	"net/http"
 )
@@ -48,10 +49,12 @@ func obtainGcpStatus() ([]incident, error) {
 		return []incident{}, errors.New("request builder has failed")
 	}
 	req.Header.Add("Content-Type", "application/json")
+	fmt.Println("Polling GCP Status webpage...")
 	resp, err := client.Do(req)
 	if err != nil {
 		return []incident{}, errors.New("request to GCP Status webpage failed")
 	}
+	fmt.Println("Successfully polled GCP status webpage")
 	defer resp.Body.Close()
 	responseBody, err := ioutil.ReadAll(resp.Body)
 	if err != nil {

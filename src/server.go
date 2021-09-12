@@ -11,7 +11,7 @@ import (
 
 func startMetricServer() {
 	var (
-		listenAddress         = flag.String("web.listen-address", ":9112", "Address to listen on for web interface.")
+		listenAddress         = flag.String("web.listen-address", ":9118", "Address to listen on for web interface.")
 		metricPath            = flag.String("web.metrics-path", "/metrics", "Path under which to expose metrics.")
 		lastUpdate            = flag.Bool("exporter.save-last-update", false, "Use flag if you want to save last incident update description. Disabled by default.")
 		collectResolvedEvents = flag.Bool("exporter.collect-resolved-incidents", false, "Use flag if you want to collect already resolved incidents. Disabled by default.")
