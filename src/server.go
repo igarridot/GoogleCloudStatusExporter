@@ -35,7 +35,6 @@ func startMetricServer() {
 }
 
 func serverMetrics(listenAddress, metricsPath string) error {
-	flag.Parse()
 	Register()
 	http.Handle(metricsPath, promhttp.Handler())
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
