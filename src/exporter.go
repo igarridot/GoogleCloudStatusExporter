@@ -93,13 +93,14 @@ func (collector *gcpStatusCollector) AddMetric(ch chan<- prometheus.Metric, gcpI
 }
 
 func (collector *gcpStatusCollector) Collect(ch chan<- prometheus.Metric) {
-
-	gcpCurrentStatus, err := obtainGcpStatus()
+	httpClient := RealHttpClient{}
+	doMethod := RealDoMethod{}
+	gcpCurrentStatus, err := httpClient.obtainGcpStatus(doMethod)
 	if err != nil {
 		log.Fatal("Cannot obtain GCP Status")
 	}
 
-	for _, gcpIncident := range gcpCurrentStatus {
+	for _, gcpIncident := range *gcpCurrentStatus {
 		_, CollectResolvedIncidents := os.LookupEnv("COLLECT_RESOLVED_EVENTS")
 		if !CollectResolvedIncidents {
 			if gcpIncident.MostRecentUpdate.Updatestatus != "AVAILABLE" && gcpIncident.EndsAt == "" {

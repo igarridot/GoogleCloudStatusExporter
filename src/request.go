@@ -8,6 +8,16 @@ import (
 	"net/http"
 )
 
+type RealHttpClient struct{}
+type HttpClient interface {
+	obtainGcpStatus(DoMethod) ([]incident, error)
+}
+
+type RealDoMethod struct{}
+type DoMethod interface {
+	Do(*http.Request) (*http.Response, error)
+}
+
 type incident struct {
 	IncidentId          string    `json:"id"`
 	IncidentNumber      string    `json:"number"`
@@ -39,30 +49,33 @@ type product struct {
 	Id    string `json:"id"`
 }
 
-func obtainGcpStatus() ([]incident, error) {
+func (r RealHttpClient) obtainGcpStatus(client DoMethod) (*[]incident, error) {
 	var status []incident
-
-	client := &http.Client{}
 
 	req, err := http.NewRequest("GET", "https://status.cloud.google.com/incidents.json", nil)
 	if err != nil {
-		return []incident{}, errors.New("request builder has failed")
+		return &[]incident{}, errors.New("request builder has failed")
 	}
 	req.Header.Add("Content-Type", "application/json")
 	fmt.Println("Polling GCP Status webpage...")
 	resp, err := client.Do(req)
 	if err != nil {
-		return []incident{}, errors.New("request to GCP Status webpage failed")
+		return &[]incident{}, errors.New("request to GCP Status webpage failed")
 	}
 	fmt.Println("Successfully polled GCP status webpage")
 	defer resp.Body.Close()
 	responseBody, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
-		return []incident{}, errors.New("cannot read the response body")
+		return &[]incident{}, errors.New("cannot read the response body")
 	}
 	err = json.Unmarshal(responseBody, &status)
 	if err != nil {
-		return []incident{}, errors.New("failed to unmarshal response json body")
+		return &[]incident{}, errors.New("failed to unmarshal response json body")
 	}
-	return status, nil
+	return &status, nil
+}
+
+func (r RealDoMethod) Do(req *http.Request) (*http.Response, error) {
+	client := &http.Client{}
+	return client.Do(req)
 }
