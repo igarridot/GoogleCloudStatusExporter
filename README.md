@@ -56,31 +56,20 @@ Each label will store the basic incident information:
 
 ---------------------------------
 
-## Configuration 
+## Configuration
+
+Work In Progress...
+
 All the parameters can be introduced via environment variable or command argument. Command arguments have higher priority than environment variables:
 
-
-### Environment Variables
-| Env Var Name         | Value Format                                |  Default Value  | Example                                                              |
-| --------------------:|:-------------------------------------------:|:---------------:|:--------------------------------------------------------------------:|
-| GCP_STATUS_ENDPOINT  | String       | https://status.cloud.google.com/incidents.json | ```GCP_STATUS_ENDPOINT='https://status.cloud.google.com/incidents.json'```|
-| LISTEN_PORT          | Integer      | 9118                                           | ```LISTEN_PORT=9118```                                                     |
-| DEBUG                | Boolean      | False                                          | ```DEBUG=True```                                                           |
-| PRODUCTS             | Comma separated values inside single string |                 | ```PRODUCTS='Healthcare and Life Sciences,Cloud Machine Learning'```       |
-| ZONES                | Comma separated values inside single string |                 | ```ZONES='us-central1,asia-east2'```                                       |
-| MANAGE_ALL_EVENTS    | Boolean      | False                                          | ```MANAGE_ALL_EVENTS=True```
-| LAST_UPDATE          | Boolean      | False                                          | ```LAST_UPDATE=True``` |
-
 ### Entrypoint parameters
-| Short Param Name | Long Param Name        |  Default Value                 | Example                                                              |
-| ----------------:|:----------------------:|:------------------------------:|:--------------------------------------------------------------------:|
-| -e               | --gcp_status_endpoint  | https://status.cloud.google.com/incidents.json | ```--gcp_status_endpoint 'https://status.cloud.google.com/incidents.json'``` |
-| -p               | --listen_port          | 9118                           | ```--listen_port 9118```                                                   |
-| -d               | --debug_mode           | False                          |```--debug_mode```                                                         |
-| -P               | --products             |      | ```--products 'Healthcare and Life Sciences' 'Cloud Machine Learning'```                             |
-| -z               | --zones                |      | ```--zones 'asia-east2' 'Multi-Region'```                                                            |
-| -a               | --manage_all_events    | False | ```--manage_all_events```
-| -u               | --last_update          | False | ```--last_update``` |
+| Long Param Name        |  Default Value                 | Example                                                              |
+|:----------------------:|:------------------------------:|:--------------------------------------------------------------------:|
+| --web.listen-address   | 9118                           | ```--web.listen-address 9118```                                                   |
+| --exporter.filtered-products             |      | ```--exporter.filtered-products "Healthcare and Life Sciences,Cloud Machine Learning"```                             |
+| --exporter.incidents-zones                |      | ```--exporter.incidents-zones "asia-east2,Multi-Region"```                                                            |
+| --exporter.collect-resolved-incidents    | False | ```--exporter.collect-resolved-incidents```
+| --exporter.save-last-update          | False | ```--exporter.save-last-update``` |
 ---------------------------------
 
 ## Build image
@@ -90,29 +79,22 @@ You can build the image running the following target:
 make build
 ```
 
-Otherwise, the image is available in [Docker Hub](https://hub.docker.com/repository/docker/norbega/gcp-status-exporter)
+Otherwise, the image is available in [Docker Hub](https://hub.docker.com/layers/norbega/gcp-status-exporter/v2.0.0-rc1/images/sha256-cb410b57474cbfc424a2cf6fa138666b41b76556a2ac5e9484acf0d8adfcf07c?context=repo)
 
 ---------------------------------
 
 ## Usage outside of containers
 
-*Not tested in Python 2.7*
-- Install project requirements:
-
-```
-pip install -r src/requirements.txt
-```
-
 - Run the application:
 
 ```
-python main.py
+./gcp-status-exporter-linux
 ```
 
 - Example with parameters:
 
 ```
-python main.py -e 'https://status.cloud.google.com/incidents.json' -p 9118 --products 'Google Cloud Datastore' 'Google Cloud DNS' -z 'europe-west1' 'europe-west4'
+./gcp-status-exporter-linux --web.listen-address ":9119" --web.metrics-path "/metrics" --exporter.save-last-update --exporter.collect-resolved-incidents --exporter.incidents-zones "europe-west2,multizone" --exporter.filtered-products "Google Cloud Datastore,Google Cloud DNS"
 ```
 
 ---------------------------------
@@ -127,4 +109,5 @@ Grafana directory contains a Dashboard JSON file that looks like this:
 ---------------------------------
 
 ## Referencies
-- Magnificent [Robustperception Blog](https://www.robustperception.io)
+- Prometheus Go client [guide](https://prometheus.io/docs/guides/go-application/)
+- Prometheus Go client [library](https://pkg.go.dev/github.com/prometheus/client_golang/prometheus)

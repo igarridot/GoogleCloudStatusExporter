@@ -17,19 +17,10 @@ spec:
     spec:
       containers:
       - name: application
-        image: norbega/gcp-status-exporter:v1.1.2
+        image: norbega/gcp-status-exporter:v2.0.0-rc1
         resources:
           limits:
             memory: "64Mi"
             cpu: "50m"
-        env:
-          - name: PYTHONUNBUFFERED
-            value: "True"
-          - name: MANAGE_ALL_EVENTS 
-            value: "True"
-          - name: DEBUG
-            value: "True"
-          - name: LAST_UPDATE
-            value: "True"
         ports:
         - containerPort: 9118

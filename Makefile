@@ -1,30 +1,38 @@
-app_tag_name = norbega/gcp-status-exporter
-version = v1.1.2
+tag_name = norbega/
+golang_version := 1.17.1
+VERSION ?= v2.0.0-rc2
+PROJECT ?= gcp-status-exporter
+
+build-osx:
+	cd src && env GOOS=darwin GOARCH=amd64 go build -o ../bin/$(PROJECT)-osx
+
+build-linux:
+	cd src && env GOOS=linux GOARCH=amd64 go build -o ../bin/$(PROJECT)-linux
 
 build:
-	docker build \
-		-t $(app_tag_name):$(version) -f docker/Dockerfile .
-
+	@docker build -t $(tag_name)$(PROJECT):$(VERSION) -f docker/Dockerfile \
+		--build-arg GOLANG_VERSION=$(golang_version) \
+		--build-arg PROJECT_NAME=$(PROJECT) \
+		.
 push:
-	docker push $(app_tag_name):$(version)
+	docker push $(tag_name)$(PROJECT):$(VERSION)
 
-install-test-requirements:
-	pip install -r src/requirements.txt
+install-requirements:
+	cd src && go get -u
+	cd src && go mod init || True
+	cd src && go mod tidy
 
 tests:
-	python -m unittest -vvv test.test_main
+	cd src && go test
 
 run-local:
-	docker run -d --name gcp-exporter -p '9118:9118' -e MANAGE_ALL_EVENTS=True $(app_tag_name):$(version)
-
-bash-local:
-	docker exec -ti gcp-exporter sh
+	docker run -d --name gcp-exporter -p '9118:9118' $(tag_name)$(PROJECT):$(VERSION) '--exporter.collect-resolved-incidents' '--exporter.save-last-update'
 
 stop-local:
 	docker rm -f  gcp-exporter
 
 create-tag:
-	git tag -a $(version)
+	git tag -a $(VERSION)
 	git push origin --tags
 
-.PHONY: build push run-local stop-local create-tag install-test-requirements tests
+.PHONY: build push run-local stop-local create-tag install-requirements tests
