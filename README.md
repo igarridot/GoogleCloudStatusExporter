@@ -22,8 +22,9 @@ Is not guaranteed that "Zones" filter flag works as expected. Google used to men
 ## Metrics
 This Prometheus only returns one metric called ```gcp_incidents``` and the value of the metric is stablised based on the  alert severity:
   * resolved: 0
-  * medium: 1
-  * high: 2
+  * low: 1
+  * medium: 2
+  * high: 3
 
 Example metrics:
 

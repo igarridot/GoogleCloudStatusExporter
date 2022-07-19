@@ -103,8 +103,10 @@ class GCPStatusCollector(object):
         if incident['most_recent_update']['status'] == 'AVAILABLE' or 'end' in incident:
             return 0
         elif incident['severity'] == 'high':
+            return 3
+        elif incident['severity'] == 'medium':
             return 2
-        elif incident['severity'] == 'medium' or incident['severity'] == 'low':
+        elif incident['severity'] == 'low':
             return 1
 
     def incident_handler(self, incident, metric):
