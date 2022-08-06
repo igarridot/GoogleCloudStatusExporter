@@ -35,10 +35,12 @@ func severityHandler(gcpIncident incident) float64 {
 	var severity float64
 	if gcpIncident.MostRecentUpdate.Updatestatus == "AVAILABLE" || gcpIncident.EndsAt != "" {
 		severity = 0.0
-	} else if gcpIncident.Severity == "high" {
-		severity = 2.0
-	} else if gcpIncident.Severity == "medium" {
+	} else if gcpIncident.Severity == "low" {
 		severity = 1.0
+	} else if gcpIncident.Severity == "medium" {
+		severity = 2.0
+	} else if gcpIncident.Severity == "high" {
+		severity = 3.0
 	}
 	return severity
 }

@@ -1,6 +1,6 @@
 tag_name = norbega/
-golang_version := 1.17.1
-VERSION ?= v2.0.0-rc2
+golang_version := 1.18.1
+VERSION ?= v2.0.0-rc3
 PROJECT ?= gcp-status-exporter
 
 build-osx:
