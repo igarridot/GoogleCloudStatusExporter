@@ -80,7 +80,7 @@ You can build the image running the following target:
 make build
 ```
 
-Otherwise, the image is available in [Docker Hub](https://hub.docker.com/layers/norbega/gcp-status-exporter/v2.0.0-rc1/images/sha256-cb410b57474cbfc424a2cf6fa138666b41b76556a2ac5e9484acf0d8adfcf07c?context=repo)
+Otherwise, the image is available in [Docker Hub](https://hub.docker.com/layers/267332273/norbega/gcp-status-exporter/v2.0.0-rc3/images/sha256-90c49151632a33b0553fb5089fc40184711774b65ebd55193a804d12a088e421?context=repo)
 
 ---------------------------------
 
