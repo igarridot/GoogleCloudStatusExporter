@@ -111,4 +111,3 @@ func TestIncident_GetSeverityValue(t *testing.T) {
 		})
 	}
 }
-

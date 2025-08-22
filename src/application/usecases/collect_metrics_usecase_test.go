@@ -3,12 +3,12 @@ package usecases
 import (
 	"errors"
 	"testing"
-	"time"
 
 	"github.com/igarridot/GoogleCloudStatusExporter/v2.0.0/application/ports"
 	"github.com/igarridot/GoogleCloudStatusExporter/v2.0.0/domain/entities"
 	"github.com/igarridot/GoogleCloudStatusExporter/v2.0.0/domain/services"
 	"github.com/igarridot/GoogleCloudStatusExporter/v2.0.0/domain/valueobjects"
+	"github.com/igarridot/GoogleCloudStatusExporter/v2.0.0/testutils"
 )
 
 // Mock implementations
@@ -27,43 +27,6 @@ func (m *mockMetricsPort) CollectMetrics(incidents []entities.Incident, config p
 	return nil
 }
 
-func (m *mockMetricsPort) CollectMetricsWithChannel(incidents []entities.Incident, ch chan<- interface{}) {
-	// Mock implementation
-}
-
-func createTestIncidents() []entities.Incident {
-	id1, _ := valueobjects.NewIncidentID("incident-1")
-	id2, _ := valueobjects.NewIncidentID("incident-2")
-
-	endTime := time.Now()
-
-	return []entities.Incident{
-		{
-			ID:                  id1,
-			ExternalDescription: "High severity incident",
-			Severity:            valueobjects.SeverityHigh,
-			AffectedProducts: []entities.Product{
-				{Title: "Apigee", ID: "apigee"},
-			},
-			MostRecentUpdate: entities.Update{
-				UpdateStatus: "INVESTIGATING",
-			},
-		},
-		{
-			ID:                  id2,
-			ExternalDescription: "Resolved incident",
-			Severity:            valueobjects.SeverityLow,
-			EndTime:             &endTime,
-			AffectedProducts: []entities.Product{
-				{Title: "Cloud Storage", ID: "storage"},
-			},
-			MostRecentUpdate: entities.Update{
-				UpdateStatus: valueobjects.UpdateStatusAvailable,
-			},
-		},
-	}
-}
-
 func TestCollectMetricsUseCase_Execute(t *testing.T) {
 	tests := []struct {
 		name                  string
@@ -76,7 +39,7 @@ func TestCollectMetricsUseCase_Execute(t *testing.T) {
 	}{
 		{
 			name:                  "Success case - exclude resolved",
-			incidents:             createTestIncidents(),
+			incidents:             testutils.CreateTestIncidents(),
 			filterCriteria:        valueobjects.NewFilterCriteria("", ""),
 			collectResolved:       false,
 			expectedIncidentCount: 1,
@@ -140,5 +103,3 @@ func TestCollectMetricsUseCase_Execute(t *testing.T) {
 		})
 	}
 }
-
-

@@ -4,7 +4,7 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	"io/ioutil"
+	"io"
 	"net/http"
 	"time"
 
@@ -48,7 +48,7 @@ func (a *GCPStatusAdapter) GetIncidents() ([]entities.Incident, error) {
 	fmt.Println("Successfully polled GCP status webpage")
 	defer resp.Body.Close()
 
-	responseBody, err := ioutil.ReadAll(resp.Body)
+	responseBody, err := io.ReadAll(resp.Body)
 	if err != nil {
 		return nil, errors.New("cannot read the response body")
 	}
@@ -101,46 +101,13 @@ func (a *GCPStatusAdapter) convertToEntities(rawIncidents []rawIncident) []entit
 		}
 
 		for _, rawUpdate := range raw.Updates {
-			update := entities.Update{
-				Status:       rawUpdate.Text,
-				UpdateStatus: valueobjects.NewUpdateStatus(rawUpdate.Status),
-			}
-
-			if createdAt, err := time.Parse(time.RFC3339, rawUpdate.Created); err == nil {
-				update.CreatedAt = createdAt
-			}
-
-			if modifiedAt, err := time.Parse(time.RFC3339, rawUpdate.Modified); err == nil {
-				update.ModifiedAt = modifiedAt
-			}
-
-			if updatedDate, err := time.Parse(time.RFC3339, rawUpdate.When); err == nil {
-				update.UpdatedDate = updatedDate
-			}
-
+			update := a.convertRawUpdateToEntity(rawUpdate)
 			incident.Updates = append(incident.Updates, update)
 		}
 
 		if len(raw.Updates) > 0 {
 			lastUpdate := raw.Updates[len(raw.Updates)-1]
-			mostRecentUpdate := entities.Update{
-				Status:       lastUpdate.Text,
-				UpdateStatus: valueobjects.NewUpdateStatus(lastUpdate.Status),
-			}
-
-			if createdAt, err := time.Parse(time.RFC3339, lastUpdate.Created); err == nil {
-				mostRecentUpdate.CreatedAt = createdAt
-			}
-
-			if modifiedAt, err := time.Parse(time.RFC3339, lastUpdate.Modified); err == nil {
-				mostRecentUpdate.ModifiedAt = modifiedAt
-			}
-
-			if updatedDate, err := time.Parse(time.RFC3339, lastUpdate.When); err == nil {
-				mostRecentUpdate.UpdatedDate = updatedDate
-			}
-
-			incident.MostRecentUpdate = mostRecentUpdate
+			incident.MostRecentUpdate = a.convertRawUpdateToEntity(lastUpdate)
 		}
 
 		for _, rawProduct := range raw.AffectedProducts {
@@ -155,6 +122,28 @@ func (a *GCPStatusAdapter) convertToEntities(rawIncidents []rawIncident) []entit
 	}
 
 	return incidents
+}
+
+// convertRawUpdateToEntity converts a rawUpdate to entities.Update with proper time parsing
+func (a *GCPStatusAdapter) convertRawUpdateToEntity(rawUpdate rawUpdate) entities.Update {
+	update := entities.Update{
+		Status:       rawUpdate.Text,
+		UpdateStatus: valueobjects.NewUpdateStatus(rawUpdate.Status),
+	}
+
+	if createdAt, err := time.Parse(time.RFC3339, rawUpdate.Created); err == nil {
+		update.CreatedAt = createdAt
+	}
+
+	if modifiedAt, err := time.Parse(time.RFC3339, rawUpdate.Modified); err == nil {
+		update.ModifiedAt = modifiedAt
+	}
+
+	if updatedDate, err := time.Parse(time.RFC3339, rawUpdate.When); err == nil {
+		update.UpdatedDate = updatedDate
+	}
+
+	return update
 }
 
 type rawIncident struct {

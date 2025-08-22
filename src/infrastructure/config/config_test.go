@@ -30,9 +30,9 @@ func TestLoadConfig(t *testing.T) {
 			expectedMetricsPath:   "/custom",
 		},
 		{
-			name:                   "Enable flags",
-			args:                   []string{"-exporter.save-last-update", "-exporter.collect-resolved-incidents"},
-			expectedSaveLastUpdate: true,
+			name:                    "Enable flags",
+			args:                    []string{"-exporter.save-last-update", "-exporter.collect-resolved-incidents"},
+			expectedSaveLastUpdate:  true,
 			expectedCollectResolved: true,
 		},
 	}
@@ -66,7 +66,7 @@ func TestLoadConfig(t *testing.T) {
 func TestConfigToMetricsConfig(t *testing.T) {
 	config := &Config{SaveLastUpdate: true}
 	metricsConfig := config.ToMetricsConfig()
-	
+
 	if !metricsConfig.SaveLastUpdate {
 		t.Error("Expected SaveLastUpdate to be true")
 	}

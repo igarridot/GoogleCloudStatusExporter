@@ -6,6 +6,8 @@ import (
 	"github.com/prometheus/client_golang/prometheus"
 )
 
+const gcpStatusBaseURL = "https://status.cloud.google.com/"
+
 type PrometheusAdapter struct {
 	gcpStatus *prometheus.Desc
 	config    ports.MetricsConfig
@@ -35,6 +37,8 @@ func (a *PrometheusAdapter) Describe(ch chan<- *prometheus.Desc) {
 }
 
 func (a *PrometheusAdapter) CollectMetrics(incidents []entities.Incident, config ports.MetricsConfig) error {
+	// This method is kept for interface compliance but the actual implementation
+	// is in CollectMetricsWithChannel which is used by the Prometheus collector
 	return nil
 }
 
@@ -48,30 +52,24 @@ func (a *PrometheusAdapter) CollectMetricsWithChannel(incidents []entities.Incid
 
 func (a *PrometheusAdapter) addMetric(ch chan<- prometheus.Metric, incident entities.Incident, product entities.Product) {
 	incidentSeverity := incident.GetSeverityValue()
-	uri := "https://status.cloud.google.com/" + incident.URI
+	uri := gcpStatusBaseURL + incident.URI
+
+	labelValues := []string{
+		incident.ID.String(),
+		incident.MostRecentUpdate.Status,
+		product.Title,
+		incident.ExternalDescription,
+		uri,
+	}
 
 	if a.config.SaveLastUpdate {
-		ch <- prometheus.MustNewConstMetric(
-			a.gcpStatus,
-			prometheus.GaugeValue,
-			incidentSeverity,
-			incident.ID.String(),
-			incident.MostRecentUpdate.Status,
-			product.Title,
-			incident.ExternalDescription,
-			uri,
-			incident.MostRecentUpdate.Status,
-		)
-	} else {
-		ch <- prometheus.MustNewConstMetric(
-			a.gcpStatus,
-			prometheus.GaugeValue,
-			incidentSeverity,
-			incident.ID.String(),
-			incident.MostRecentUpdate.Status,
-			product.Title,
-			incident.ExternalDescription,
-			uri,
-		)
+		labelValues = append(labelValues, incident.MostRecentUpdate.Status)
 	}
+
+	ch <- prometheus.MustNewConstMetric(
+		a.gcpStatus,
+		prometheus.GaugeValue,
+		incidentSeverity,
+		labelValues...,
+	)
 }

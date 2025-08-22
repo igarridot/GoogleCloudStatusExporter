@@ -149,3 +149,37 @@ func TestHasProductFilter(t *testing.T) {
 	}
 }
 
+func TestNewIncidentID_EmptyString(t *testing.T) {
+	_, err := NewIncidentID("")
+
+	if err == nil {
+		t.Error("Expected error when creating IncidentID with empty string")
+	}
+
+	expectedError := "incident ID cannot be empty"
+	if err.Error() != expectedError {
+		t.Errorf("Expected error '%s', got '%s'", expectedError, err.Error())
+	}
+}
+
+func TestNewUpdateStatus(t *testing.T) {
+	tests := []struct {
+		name     string
+		input    string
+		expected UpdateStatus
+	}{
+		{"AVAILABLE status", "AVAILABLE", UpdateStatusAvailable},
+		{"INVESTIGATING status", "INVESTIGATING", UpdateStatus("INVESTIGATING")},
+		{"Empty string", "", UpdateStatus("")},
+		{"Custom status", "CUSTOM_STATUS", UpdateStatus("CUSTOM_STATUS")},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			result := NewUpdateStatus(tt.input)
+			if result != tt.expected {
+				t.Errorf("Expected %s, got %s", tt.expected, result)
+			}
+		})
+	}
+}
