@@ -2,6 +2,7 @@ tag_name = norbega/
 golang_version := 1.25
 VERSION ?= v2.0.0-rc4
 PROJECT ?= gcp-status-exporter
+GOARCH ?= amd64
 
 build-osx:
 	cd src && env GOOS=darwin GOARCH=amd64 go build -o ../bin/$(PROJECT)-osx
@@ -16,12 +17,14 @@ build:
 	@docker build -t $(tag_name)$(PROJECT):$(VERSION) -f docker/Dockerfile \
 		--build-arg GOLANG_VERSION=$(golang_version) \
 		--build-arg PROJECT_NAME=$(PROJECT) \
+		--build-arg GOARCH=$(GOARCH) \
 		.
 
 build-arm64:
 	@docker build --platform linux/arm64 -t $(tag_name)$(PROJECT):$(VERSION) -f docker/Dockerfile \
 		--build-arg GOLANG_VERSION=$(golang_version) \
 		--build-arg PROJECT_NAME=$(PROJECT) \
+		--build-arg GOARCH=arm64 \
 		.
 
 push:
@@ -36,19 +39,13 @@ install-requirements:
 	cd src && go mod tidy
 
 tests:
-	cd src && go test
+	cd src && go test ./...
 
 run-local:
-	docker run -d --name gcp-exporter -p '9118:9118' $(tag_name)$(PROJECT):$(VERSION) '--exporter.collect-resolved-incidents' '--exporter.save-last-update'
-
-run-local-arm64:
-	docker run -d --platform linux/arm64 --name gcp-exporter-arm64 -p '9119:9118' $(tag_name)$(PROJECT):$(VERSION) '--exporter.collect-resolved-incidents' '--exporter.save-last-update'
+	docker run -d --name gcp-exporter -p '9118:9118' $(tag_name)$(PROJECT):$(VERSION) '--exporter.collect-resolved-incidents' '-exporter.filtered-products Apigee' '--exporter.save-last-update'
 
 stop-local:
 	docker rm -f  gcp-exporter
-
-stop-local-arm64:
-	docker rm -f  gcp-exporter-arm64
 
 create-tag:
 	git tag -a $(VERSION)

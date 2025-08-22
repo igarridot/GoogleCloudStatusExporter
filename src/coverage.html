@@ -1,0 +1,867 @@
+
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<title>usecases: Go Coverage Report</title>
+		<style>
+			body {
+				background: black;
+				color: rgb(80, 80, 80);
+			}
+			body, pre, #legend span {
+				font-family: Menlo, monospace;
+				font-weight: bold;
+			}
+			#topbar {
+				background: black;
+				position: fixed;
+				top: 0; left: 0; right: 0;
+				height: 42px;
+				border-bottom: 1px solid rgb(80, 80, 80);
+			}
+			#content {
+				margin-top: 50px;
+			}
+			#nav, #legend {
+				float: left;
+				margin-left: 10px;
+			}
+			#legend {
+				margin-top: 12px;
+			}
+			#nav {
+				margin-top: 10px;
+			}
+			#legend span {
+				margin: 0 5px;
+			}
+			.cov0 { color: rgb(192, 0, 0) }
+.cov1 { color: rgb(128, 128, 128) }
+.cov2 { color: rgb(116, 140, 131) }
+.cov3 { color: rgb(104, 152, 134) }
+.cov4 { color: rgb(92, 164, 137) }
+.cov5 { color: rgb(80, 176, 140) }
+.cov6 { color: rgb(68, 188, 143) }
+.cov7 { color: rgb(56, 200, 146) }
+.cov8 { color: rgb(44, 212, 149) }
+.cov9 { color: rgb(32, 224, 152) }
+.cov10 { color: rgb(20, 236, 155) }
+
+		</style>
+	</head>
+	<body>
+		<div id="topbar">
+			<div id="nav">
+				<select id="files">
+				
+				<option value="file0">github.com/igarridot/GoogleCloudStatusExporter/v2.0.0/application/usecases/collect_metrics_usecase.go (100.0%)</option>
+				
+				<option value="file1">github.com/igarridot/GoogleCloudStatusExporter/v2.0.0/cmd/server.go (44.4%)</option>
+				
+				<option value="file2">github.com/igarridot/GoogleCloudStatusExporter/v2.0.0/domain/entities/incident.go (100.0%)</option>
+				
+				<option value="file3">github.com/igarridot/GoogleCloudStatusExporter/v2.0.0/domain/services/incident_filter_service.go (100.0%)</option>
+				
+				<option value="file4">github.com/igarridot/GoogleCloudStatusExporter/v2.0.0/domain/valueobjects/filter_criteria.go (100.0%)</option>
+				
+				<option value="file5">github.com/igarridot/GoogleCloudStatusExporter/v2.0.0/domain/valueobjects/incident_id.go (100.0%)</option>
+				
+				<option value="file6">github.com/igarridot/GoogleCloudStatusExporter/v2.0.0/domain/valueobjects/severity.go (100.0%)</option>
+				
+				<option value="file7">github.com/igarridot/GoogleCloudStatusExporter/v2.0.0/domain/valueobjects/update_status.go (100.0%)</option>
+				
+				<option value="file8">github.com/igarridot/GoogleCloudStatusExporter/v2.0.0/infrastructure/adapters/http/gcp_status_adapter.go (90.0%)</option>
+				
+				<option value="file9">github.com/igarridot/GoogleCloudStatusExporter/v2.0.0/infrastructure/adapters/prometheus/collector.go (0.0%)</option>
+				
+				<option value="file10">github.com/igarridot/GoogleCloudStatusExporter/v2.0.0/infrastructure/adapters/prometheus/prometheus_adapter.go (100.0%)</option>
+				
+				<option value="file11">github.com/igarridot/GoogleCloudStatusExporter/v2.0.0/infrastructure/config/config.go (100.0%)</option>
+				
+				<option value="file12">github.com/igarridot/GoogleCloudStatusExporter/v2.0.0/infrastructure/container/container.go (0.0%)</option>
+				
+				<option value="file13">github.com/igarridot/GoogleCloudStatusExporter/v2.0.0/main.go (0.0%)</option>
+				
+				</select>
+			</div>
+			<div id="legend">
+				<span>not tracked</span>
+			
+				<span class="cov0">not covered</span>
+				<span class="cov8">covered</span>
+			
+			</div>
+		</div>
+		<div id="content">
+		
+		<pre class="file" id="file0" style="display: none">package usecases
+
+import (
+        "github.com/igarridot/GoogleCloudStatusExporter/v2.0.0/application/ports"
+        "github.com/igarridot/GoogleCloudStatusExporter/v2.0.0/domain/entities"
+        "github.com/igarridot/GoogleCloudStatusExporter/v2.0.0/domain/services"
+        "github.com/igarridot/GoogleCloudStatusExporter/v2.0.0/domain/valueobjects"
+)
+
+type CollectMetricsUseCase struct {
+        gcpStatusPort ports.GCPStatusPort
+        metricsPort   ports.MetricsPort
+        filterService *services.IncidentFilterService
+}
+
+func NewCollectMetricsUseCase(
+        gcpStatusPort ports.GCPStatusPort,
+        metricsPort ports.MetricsPort,
+        filterService *services.IncidentFilterService,
+) *CollectMetricsUseCase <span class="cov8" title="1">{
+        return &amp;CollectMetricsUseCase{
+                gcpStatusPort: gcpStatusPort,
+                metricsPort:   metricsPort,
+                filterService: filterService,
+        }
+}</span>
+
+func (uc *CollectMetricsUseCase) Execute(
+        filterCriteria valueobjects.FilterCriteria,
+        collectResolved bool,
+        metricsConfig ports.MetricsConfig,
+) ([]entities.Incident, error) <span class="cov8" title="1">{
+        incidents, err := uc.gcpStatusPort.GetIncidents()
+        if err != nil </span><span class="cov8" title="1">{
+                return nil, err
+        }</span>
+
+        <span class="cov8" title="1">filteredIncidents := uc.filterService.FilterIncidents(incidents, filterCriteria, collectResolved)
+
+        return filteredIncidents, nil</span>
+}
+</pre>
+		
+		<pre class="file" id="file1" style="display: none">package cmd
+
+import (
+        "net/http"
+
+        "github.com/igarridot/GoogleCloudStatusExporter/v2.0.0/infrastructure/config"
+        "github.com/igarridot/GoogleCloudStatusExporter/v2.0.0/infrastructure/container"
+        "github.com/prometheus/client_golang/prometheus"
+        "github.com/prometheus/client_golang/prometheus/promhttp"
+)
+
+func StartMetricServer() error <span class="cov0" title="0">{
+        cfg := config.LoadConfig()
+
+        containerInstance := container.NewContainer(cfg)
+        collector := containerInstance.GetCollector()
+
+        prometheus.MustRegister(collector)
+
+        return serverMetrics(cfg.ListenAddress, cfg.MetricsPath)
+}</span>
+
+func serverMetrics(listenAddress, metricsPath string) error <span class="cov8" title="1">{
+        http.Handle(metricsPath, promhttp.Handler())
+        http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) </span><span class="cov8" title="1">{
+                w.Write([]byte(`
+            &lt;html&gt;
+            &lt;head&gt;&lt;title&gt;GCP status Exporter Metrics&lt;/title&gt;&lt;/head&gt;
+            &lt;body&gt;
+            &lt;h1&gt;GCP Status Prometheus exporter&lt;/h1&gt;
+            &lt;p&gt;&lt;a href='` + metricsPath + `'&gt;Metrics&lt;/a&gt;&lt;/p&gt;
+            &lt;/body&gt;
+            &lt;/html&gt;
+        `))
+        }</span>)
+        <span class="cov8" title="1">return http.ListenAndServe(listenAddress, nil)</span>
+}
+</pre>
+		
+		<pre class="file" id="file2" style="display: none">package entities
+
+import (
+        "time"
+
+        "github.com/igarridot/GoogleCloudStatusExporter/v2.0.0/domain/valueobjects"
+)
+
+type Incident struct {
+        ID                  valueobjects.IncidentID
+        Number              string
+        BeginTime           time.Time
+        CreatedAt           time.Time
+        EndTime             *time.Time
+        ModifiedAt          *time.Time
+        ExternalDescription string
+        Updates             []Update
+        MostRecentUpdate    Update
+        StatusImpact        string
+        Severity            valueobjects.Severity
+        AffectedProducts    []Product
+        ServiceKey          string
+        ServiceName         string
+        URI                 string
+}
+
+type Update struct {
+        CreatedAt    time.Time
+        ModifiedAt   time.Time
+        Status       string
+        UpdatedDate  time.Time
+        UpdateStatus valueobjects.UpdateStatus
+}
+
+type Product struct {
+        Title string
+        ID    string
+}
+
+func (i *Incident) IsResolved() bool <span class="cov8" title="1">{
+        return i.MostRecentUpdate.UpdateStatus == valueobjects.UpdateStatusAvailable || i.EndTime != nil
+}</span>
+
+func (i *Incident) GetSeverityValue() float64 <span class="cov8" title="1">{
+        if i.IsResolved() </span><span class="cov8" title="1">{
+                return 0.0
+        }</span>
+        <span class="cov8" title="1">return i.Severity.ToFloat64()</span>
+}
+</pre>
+		
+		<pre class="file" id="file3" style="display: none">package services
+
+import (
+        "strings"
+
+        "github.com/igarridot/GoogleCloudStatusExporter/v2.0.0/domain/entities"
+        "github.com/igarridot/GoogleCloudStatusExporter/v2.0.0/domain/valueobjects"
+)
+
+type IncidentFilterService struct{}
+
+func NewIncidentFilterService() *IncidentFilterService <span class="cov8" title="1">{
+        return &amp;IncidentFilterService{}
+}</span>
+
+func (s *IncidentFilterService) FilterIncidents(incidents []entities.Incident, criteria valueobjects.FilterCriteria, collectResolved bool) []entities.Incident <span class="cov8" title="1">{
+        var filtered []entities.Incident
+
+        for _, incident := range incidents </span><span class="cov8" title="1">{
+                if !collectResolved &amp;&amp; incident.IsResolved() </span><span class="cov8" title="1">{
+                        continue</span>
+                }
+
+                <span class="cov8" title="1">if s.matchesZoneFilter(incident, criteria) &amp;&amp; s.matchesProductFilter(incident, criteria) </span><span class="cov8" title="1">{
+                        filtered = append(filtered, incident)
+                }</span>
+        }
+
+        <span class="cov8" title="1">return filtered</span>
+}
+
+func (s *IncidentFilterService) matchesZoneFilter(incident entities.Incident, criteria valueobjects.FilterCriteria) bool <span class="cov8" title="1">{
+        if !criteria.HasZoneFilter() </span><span class="cov8" title="1">{
+                return true
+        }</span>
+
+        <span class="cov8" title="1">specialZones := []string{"Global", "global", "various", "Various"}
+        allZones := append(criteria.Zones, specialZones...)
+
+        for _, zone := range allZones </span><span class="cov8" title="1">{
+                if strings.Contains(incident.ExternalDescription, zone) </span><span class="cov8" title="1">{
+                        return true
+                }</span>
+        }
+
+        <span class="cov8" title="1">return false</span>
+}
+
+func (s *IncidentFilterService) matchesProductFilter(incident entities.Incident, criteria valueobjects.FilterCriteria) bool <span class="cov8" title="1">{
+        if !criteria.HasProductFilter() </span><span class="cov8" title="1">{
+                return true
+        }</span>
+
+        <span class="cov8" title="1">for _, affectedProduct := range incident.AffectedProducts </span><span class="cov8" title="1">{
+                for _, filterProduct := range criteria.Products </span><span class="cov8" title="1">{
+                        if strings.Contains(affectedProduct.Title, filterProduct) </span><span class="cov8" title="1">{
+                                return true
+                        }</span>
+                }
+        }
+
+        <span class="cov8" title="1">return false</span>
+}
+</pre>
+		
+		<pre class="file" id="file4" style="display: none">package valueobjects
+
+import "strings"
+
+type FilterCriteria struct {
+        Zones    []string
+        Products []string
+}
+
+func NewFilterCriteria(zones, products string) FilterCriteria <span class="cov8" title="1">{
+        var zoneList, productList []string
+
+        if zones != "" </span><span class="cov8" title="1">{
+                zoneList = strings.Split(zones, ",")
+        }</span>
+
+        <span class="cov8" title="1">if products != "" </span><span class="cov8" title="1">{
+                productList = strings.Split(products, ",")
+        }</span>
+
+        <span class="cov8" title="1">return FilterCriteria{
+                Zones:    zoneList,
+                Products: productList,
+        }</span>
+}
+
+func (fc FilterCriteria) HasZoneFilter() bool <span class="cov8" title="1">{
+        return len(fc.Zones) &gt; 0
+}</span>
+
+func (fc FilterCriteria) HasProductFilter() bool <span class="cov8" title="1">{
+        return len(fc.Products) &gt; 0
+}</span>
+</pre>
+		
+		<pre class="file" id="file5" style="display: none">package valueobjects
+
+import "errors"
+
+type IncidentID string
+
+func NewIncidentID(value string) (IncidentID, error) <span class="cov8" title="1">{
+        if value == "" </span><span class="cov8" title="1">{
+                return "", errors.New("incident ID cannot be empty")
+        }</span>
+        <span class="cov8" title="1">return IncidentID(value), nil</span>
+}
+
+func (id IncidentID) String() string <span class="cov8" title="1">{
+        return string(id)
+}</span>
+</pre>
+		
+		<pre class="file" id="file6" style="display: none">package valueobjects
+
+type Severity string
+
+const (
+        SeverityLow    Severity = "low"
+        SeverityMedium Severity = "medium"
+        SeverityHigh   Severity = "high"
+)
+
+func (s Severity) ToFloat64() float64 <span class="cov8" title="1">{
+        switch s </span>{
+        case SeverityLow:<span class="cov8" title="1">
+                return 1.0</span>
+        case SeverityMedium:<span class="cov8" title="1">
+                return 2.0</span>
+        case SeverityHigh:<span class="cov8" title="1">
+                return 3.0</span>
+        default:<span class="cov8" title="1">
+                return 0.0</span>
+        }
+}
+
+func NewSeverity(value string) Severity <span class="cov8" title="1">{
+        switch value </span>{
+        case "low":<span class="cov8" title="1">
+                return SeverityLow</span>
+        case "medium":<span class="cov8" title="1">
+                return SeverityMedium</span>
+        case "high":<span class="cov8" title="1">
+                return SeverityHigh</span>
+        default:<span class="cov8" title="1">
+                return ""</span>
+        }
+}
+</pre>
+		
+		<pre class="file" id="file7" style="display: none">package valueobjects
+
+type UpdateStatus string
+
+const (
+        UpdateStatusAvailable UpdateStatus = "AVAILABLE"
+)
+
+func NewUpdateStatus(value string) UpdateStatus <span class="cov8" title="1">{
+        return UpdateStatus(value)
+}</span>
+</pre>
+		
+		<pre class="file" id="file8" style="display: none">package http
+
+import (
+        "encoding/json"
+        "errors"
+        "fmt"
+        "io/ioutil"
+        "net/http"
+        "time"
+
+        "github.com/igarridot/GoogleCloudStatusExporter/v2.0.0/domain/entities"
+        "github.com/igarridot/GoogleCloudStatusExporter/v2.0.0/domain/valueobjects"
+)
+
+type GCPStatusAdapter struct {
+        httpClient HTTPClient
+}
+
+type HTTPClient interface {
+        Do(req *http.Request) (*http.Response, error)
+}
+
+type DefaultHTTPClient struct{}
+
+func (c *DefaultHTTPClient) Do(req *http.Request) (*http.Response, error) <span class="cov0" title="0">{
+        client := &amp;http.Client{}
+        return client.Do(req)
+}</span>
+
+func NewGCPStatusAdapter(httpClient HTTPClient) *GCPStatusAdapter <span class="cov8" title="1">{
+        return &amp;GCPStatusAdapter{
+                httpClient: httpClient,
+        }
+}</span>
+
+func (a *GCPStatusAdapter) GetIncidents() ([]entities.Incident, error) <span class="cov8" title="1">{
+        req, err := http.NewRequest("GET", "https://status.cloud.google.com/incidents.json", nil)
+        if err != nil </span><span class="cov0" title="0">{
+                return nil, errors.New("request builder has failed")
+        }</span>
+        <span class="cov8" title="1">req.Header.Add("Content-Type", "application/json")
+
+        fmt.Println("Polling GCP Status webpage...")
+        resp, err := a.httpClient.Do(req)
+        if err != nil </span><span class="cov0" title="0">{
+                return nil, errors.New("request to GCP Status webpage failed")
+        }</span>
+        <span class="cov8" title="1">fmt.Println("Successfully polled GCP status webpage")
+        defer resp.Body.Close()
+
+        responseBody, err := ioutil.ReadAll(resp.Body)
+        if err != nil </span><span class="cov0" title="0">{
+                return nil, errors.New("cannot read the response body")
+        }</span>
+
+        <span class="cov8" title="1">var rawIncidents []rawIncident
+        err = json.Unmarshal(responseBody, &amp;rawIncidents)
+        if err != nil </span><span class="cov0" title="0">{
+                return nil, errors.New("failed to unmarshal response json body")
+        }</span>
+
+        <span class="cov8" title="1">return a.convertToEntities(rawIncidents), nil</span>
+}
+
+func (a *GCPStatusAdapter) convertToEntities(rawIncidents []rawIncident) []entities.Incident <span class="cov8" title="1">{
+        var incidents []entities.Incident
+
+        for _, raw := range rawIncidents </span><span class="cov8" title="1">{
+                incident := entities.Incident{
+                        Number:              raw.Number,
+                        ExternalDescription: raw.ExternalDescription,
+                        StatusImpact:        raw.StatusImpact,
+                        Severity:            valueobjects.NewSeverity(raw.Severity),
+                        ServiceKey:          raw.ServiceKey,
+                        ServiceName:         raw.ServiceName,
+                        URI:                 raw.URI,
+                }
+
+                if id, err := valueobjects.NewIncidentID(raw.ID); err == nil </span><span class="cov8" title="1">{
+                        incident.ID = id
+                }</span>
+
+                <span class="cov8" title="1">if beginTime, err := time.Parse(time.RFC3339, raw.Begin); err == nil </span><span class="cov8" title="1">{
+                        incident.BeginTime = beginTime
+                }</span>
+
+                <span class="cov8" title="1">if createdAt, err := time.Parse(time.RFC3339, raw.Created); err == nil </span><span class="cov8" title="1">{
+                        incident.CreatedAt = createdAt
+                }</span>
+
+                <span class="cov8" title="1">if raw.End != "" </span><span class="cov8" title="1">{
+                        if endTime, err := time.Parse(time.RFC3339, raw.End); err == nil </span><span class="cov8" title="1">{
+                                incident.EndTime = &amp;endTime
+                        }</span>
+                }
+
+                <span class="cov8" title="1">if raw.Modified != "" </span><span class="cov8" title="1">{
+                        if modifiedAt, err := time.Parse(time.RFC3339, raw.Modified); err == nil </span><span class="cov8" title="1">{
+                                incident.ModifiedAt = &amp;modifiedAt
+                        }</span>
+                }
+
+                <span class="cov8" title="1">for _, rawUpdate := range raw.Updates </span><span class="cov8" title="1">{
+                        update := entities.Update{
+                                Status:       rawUpdate.Text,
+                                UpdateStatus: valueobjects.NewUpdateStatus(rawUpdate.Status),
+                        }
+
+                        if createdAt, err := time.Parse(time.RFC3339, rawUpdate.Created); err == nil </span><span class="cov8" title="1">{
+                                update.CreatedAt = createdAt
+                        }</span>
+
+                        <span class="cov8" title="1">if modifiedAt, err := time.Parse(time.RFC3339, rawUpdate.Modified); err == nil </span><span class="cov8" title="1">{
+                                update.ModifiedAt = modifiedAt
+                        }</span>
+
+                        <span class="cov8" title="1">if updatedDate, err := time.Parse(time.RFC3339, rawUpdate.When); err == nil </span><span class="cov8" title="1">{
+                                update.UpdatedDate = updatedDate
+                        }</span>
+
+                        <span class="cov8" title="1">incident.Updates = append(incident.Updates, update)</span>
+                }
+
+                <span class="cov8" title="1">if len(raw.Updates) &gt; 0 </span><span class="cov8" title="1">{
+                        lastUpdate := raw.Updates[len(raw.Updates)-1]
+                        mostRecentUpdate := entities.Update{
+                                Status:       lastUpdate.Text,
+                                UpdateStatus: valueobjects.NewUpdateStatus(lastUpdate.Status),
+                        }
+
+                        if createdAt, err := time.Parse(time.RFC3339, lastUpdate.Created); err == nil </span><span class="cov8" title="1">{
+                                mostRecentUpdate.CreatedAt = createdAt
+                        }</span>
+
+                        <span class="cov8" title="1">if modifiedAt, err := time.Parse(time.RFC3339, lastUpdate.Modified); err == nil </span><span class="cov8" title="1">{
+                                mostRecentUpdate.ModifiedAt = modifiedAt
+                        }</span>
+
+                        <span class="cov8" title="1">if updatedDate, err := time.Parse(time.RFC3339, lastUpdate.When); err == nil </span><span class="cov8" title="1">{
+                                mostRecentUpdate.UpdatedDate = updatedDate
+                        }</span>
+
+                        <span class="cov8" title="1">incident.MostRecentUpdate = mostRecentUpdate</span>
+                }
+
+                <span class="cov8" title="1">for _, rawProduct := range raw.AffectedProducts </span><span class="cov8" title="1">{
+                        product := entities.Product{
+                                Title: rawProduct.Title,
+                                ID:    rawProduct.ID,
+                        }
+                        incident.AffectedProducts = append(incident.AffectedProducts, product)
+                }</span>
+
+                <span class="cov8" title="1">incidents = append(incidents, incident)</span>
+        }
+
+        <span class="cov8" title="1">return incidents</span>
+}
+
+type rawIncident struct {
+        ID                  string       `json:"id"`
+        Number              string       `json:"number"`
+        Begin               string       `json:"begin"`
+        Created             string       `json:"created"`
+        End                 string       `json:"end,omitempty"`
+        Modified            string       `json:"modified,omitempty"`
+        ExternalDescription string       `json:"external_desc"`
+        Updates             []rawUpdate  `json:"updates,omitempty"`
+        StatusImpact        string       `json:"status_impact"`
+        Severity            string       `json:"severity"`
+        AffectedProducts    []rawProduct `json:"affected_products"`
+        ServiceKey          string       `json:"service_key"`
+        ServiceName         string       `json:"service_name"`
+        URI                 string       `json:"uri"`
+}
+
+type rawUpdate struct {
+        Created  string `json:"created"`
+        Modified string `json:"modified"`
+        Text     string `json:"text"`
+        When     string `json:"when"`
+        Status   string `json:"status"`
+}
+
+type rawProduct struct {
+        Title string `json:"title"`
+        ID    string `json:"id"`
+}
+</pre>
+		
+		<pre class="file" id="file9" style="display: none">package prometheus
+
+import (
+        "github.com/igarridot/GoogleCloudStatusExporter/v2.0.0/application/ports"
+        "github.com/igarridot/GoogleCloudStatusExporter/v2.0.0/application/usecases"
+        "github.com/igarridot/GoogleCloudStatusExporter/v2.0.0/domain/valueobjects"
+        "github.com/prometheus/client_golang/prometheus"
+        "log"
+)
+
+type GCPStatusCollector struct {
+        useCase         *usecases.CollectMetricsUseCase
+        adapter         *PrometheusAdapter
+        filterCriteria  valueobjects.FilterCriteria
+        collectResolved bool
+        metricsConfig   ports.MetricsConfig
+}
+
+func NewGCPStatusCollector(
+        useCase *usecases.CollectMetricsUseCase,
+        adapter *PrometheusAdapter,
+        filterCriteria valueobjects.FilterCriteria,
+        collectResolved bool,
+        metricsConfig ports.MetricsConfig,
+) *GCPStatusCollector <span class="cov0" title="0">{
+        return &amp;GCPStatusCollector{
+                useCase:         useCase,
+                adapter:         adapter,
+                filterCriteria:  filterCriteria,
+                collectResolved: collectResolved,
+                metricsConfig:   metricsConfig,
+        }
+}</span>
+
+func (c *GCPStatusCollector) Describe(ch chan&lt;- *prometheus.Desc) <span class="cov0" title="0">{
+        c.adapter.Describe(ch)
+}</span>
+
+func (c *GCPStatusCollector) Collect(ch chan&lt;- prometheus.Metric) <span class="cov0" title="0">{
+        incidents, err := c.useCase.Execute(c.filterCriteria, c.collectResolved, c.metricsConfig)
+        if err != nil </span><span class="cov0" title="0">{
+                log.Printf("Error collecting metrics: %v", err)
+                return
+        }</span>
+
+        <span class="cov0" title="0">c.adapter.CollectMetricsWithChannel(incidents, ch)</span>
+}
+</pre>
+		
+		<pre class="file" id="file10" style="display: none">package prometheus
+
+import (
+        "github.com/igarridot/GoogleCloudStatusExporter/v2.0.0/application/ports"
+        "github.com/igarridot/GoogleCloudStatusExporter/v2.0.0/domain/entities"
+        "github.com/prometheus/client_golang/prometheus"
+)
+
+type PrometheusAdapter struct {
+        gcpStatus *prometheus.Desc
+        config    ports.MetricsConfig
+}
+
+func NewPrometheusAdapter(config ports.MetricsConfig) *PrometheusAdapter <span class="cov8" title="1">{
+        var labels []string
+        if config.SaveLastUpdate </span><span class="cov8" title="1">{
+                labels = []string{"id", "status", "product", "description", "uri", "last_update"}
+        }</span> else<span class="cov8" title="1"> {
+                labels = []string{"id", "status", "product", "description", "uri"}
+        }</span>
+
+        <span class="cov8" title="1">return &amp;PrometheusAdapter{
+                gcpStatus: prometheus.NewDesc(
+                        prometheus.BuildFQName("gcp", "", "incidents"),
+                        "GCP Incident last update status",
+                        labels,
+                        nil,
+                ),
+                config: config,
+        }</span>
+}
+
+func (a *PrometheusAdapter) Describe(ch chan&lt;- *prometheus.Desc) <span class="cov8" title="1">{
+        ch &lt;- a.gcpStatus
+}</span>
+
+func (a *PrometheusAdapter) CollectMetrics(incidents []entities.Incident, config ports.MetricsConfig) error <span class="cov8" title="1">{
+        return nil
+}</span>
+
+func (a *PrometheusAdapter) CollectMetricsWithChannel(incidents []entities.Incident, ch chan&lt;- prometheus.Metric) <span class="cov8" title="1">{
+        for _, incident := range incidents </span><span class="cov8" title="1">{
+                for _, product := range incident.AffectedProducts </span><span class="cov8" title="1">{
+                        a.addMetric(ch, incident, product)
+                }</span>
+        }
+}
+
+func (a *PrometheusAdapter) addMetric(ch chan&lt;- prometheus.Metric, incident entities.Incident, product entities.Product) <span class="cov8" title="1">{
+        incidentSeverity := incident.GetSeverityValue()
+        uri := "https://status.cloud.google.com/" + incident.URI
+
+        if a.config.SaveLastUpdate </span><span class="cov8" title="1">{
+                ch &lt;- prometheus.MustNewConstMetric(
+                        a.gcpStatus,
+                        prometheus.GaugeValue,
+                        incidentSeverity,
+                        incident.ID.String(),
+                        incident.MostRecentUpdate.Status,
+                        product.Title,
+                        incident.ExternalDescription,
+                        uri,
+                        incident.MostRecentUpdate.Status,
+                )
+        }</span> else<span class="cov8" title="1"> {
+                ch &lt;- prometheus.MustNewConstMetric(
+                        a.gcpStatus,
+                        prometheus.GaugeValue,
+                        incidentSeverity,
+                        incident.ID.String(),
+                        incident.MostRecentUpdate.Status,
+                        product.Title,
+                        incident.ExternalDescription,
+                        uri,
+                )
+        }</span>
+}
+</pre>
+		
+		<pre class="file" id="file11" style="display: none">package config
+
+import (
+        "flag"
+        "os"
+
+        "github.com/igarridot/GoogleCloudStatusExporter/v2.0.0/application/ports"
+        "github.com/igarridot/GoogleCloudStatusExporter/v2.0.0/domain/valueobjects"
+)
+
+type Config struct {
+        ListenAddress   string
+        MetricsPath     string
+        SaveLastUpdate  bool
+        CollectResolved bool
+        FilterCriteria  valueobjects.FilterCriteria
+}
+
+func LoadConfig() *Config <span class="cov8" title="1">{
+        var (
+                listenAddress         = flag.String("web.listen-address", ":9118", "Address to listen on for web interface.")
+                metricPath            = flag.String("web.metrics-path", "/metrics", "Path under which to expose metrics.")
+                lastUpdate            = flag.Bool("exporter.save-last-update", false, "Use flag if you want to save last incident update description. Disabled by default.")
+                collectResolvedEvents = flag.Bool("exporter.collect-resolved-incidents", false, "Use flag if you want to collect already resolved incidents. Disabled by default.")
+                incidentsZones        = flag.String("exporter.incidents-zones", "", "Use this flag if you want to filter by incident zones.")
+                filteredProducts      = flag.String("exporter.filtered-products", "", "Use this flag if you want to filter incidents by product names.")
+        )
+        flag.Parse()
+
+        if *lastUpdate </span><span class="cov8" title="1">{
+                os.Setenv("SAVE_LAST_UPDATE", "true")
+        }</span>
+        <span class="cov8" title="1">if *collectResolvedEvents </span><span class="cov8" title="1">{
+                os.Setenv("COLLECT_RESOLVED_EVENTS", "true")
+        }</span>
+        <span class="cov8" title="1">if *incidentsZones != "" </span><span class="cov8" title="1">{
+                os.Setenv("INCIDENTS_ZONES", *incidentsZones)
+        }</span>
+        <span class="cov8" title="1">if *filteredProducts != "" </span><span class="cov8" title="1">{
+                os.Setenv("FILTERED_PRODUCTS", *filteredProducts)
+        }</span>
+
+        <span class="cov8" title="1">return &amp;Config{
+                ListenAddress:   *listenAddress,
+                MetricsPath:     *metricPath,
+                SaveLastUpdate:  *lastUpdate,
+                CollectResolved: *collectResolvedEvents,
+                FilterCriteria:  valueobjects.NewFilterCriteria(*incidentsZones, *filteredProducts),
+        }</span>
+}
+
+func (c *Config) ToMetricsConfig() ports.MetricsConfig <span class="cov8" title="1">{
+        return ports.MetricsConfig{
+                SaveLastUpdate: c.SaveLastUpdate,
+        }
+}</span>
+</pre>
+		
+		<pre class="file" id="file12" style="display: none">package container
+
+import (
+        "github.com/igarridot/GoogleCloudStatusExporter/v2.0.0/application/usecases"
+        "github.com/igarridot/GoogleCloudStatusExporter/v2.0.0/domain/services"
+        "github.com/igarridot/GoogleCloudStatusExporter/v2.0.0/infrastructure/adapters/http"
+        prometheusAdapter "github.com/igarridot/GoogleCloudStatusExporter/v2.0.0/infrastructure/adapters/prometheus"
+        "github.com/igarridot/GoogleCloudStatusExporter/v2.0.0/infrastructure/config"
+        "github.com/prometheus/client_golang/prometheus"
+)
+
+type Container struct {
+        config    *config.Config
+        collector prometheus.Collector
+}
+
+func NewContainer(cfg *config.Config) *Container <span class="cov0" title="0">{
+        return &amp;Container{
+                config: cfg,
+        }
+}</span>
+
+func (c *Container) GetCollector() prometheus.Collector <span class="cov0" title="0">{
+        if c.collector == nil </span><span class="cov0" title="0">{
+                httpClient := &amp;http.DefaultHTTPClient{}
+                gcpStatusAdapter := http.NewGCPStatusAdapter(httpClient)
+
+                metricsConfig := c.config.ToMetricsConfig()
+                promAdapter := prometheusAdapter.NewPrometheusAdapter(metricsConfig)
+
+                filterService := services.NewIncidentFilterService()
+
+                useCase := usecases.NewCollectMetricsUseCase(
+                        gcpStatusAdapter,
+                        promAdapter,
+                        filterService,
+                )
+
+                c.collector = prometheusAdapter.NewGCPStatusCollector(
+                        useCase,
+                        promAdapter,
+                        c.config.FilterCriteria,
+                        c.config.CollectResolved,
+                        metricsConfig,
+                )
+        }</span>
+
+        <span class="cov0" title="0">return c.collector</span>
+}
+</pre>
+		
+		<pre class="file" id="file13" style="display: none">package main
+
+import (
+        "github.com/igarridot/GoogleCloudStatusExporter/v2.0.0/cmd"
+        "log"
+)
+
+func main() <span class="cov0" title="0">{
+        log.Fatal(cmd.StartMetricServer())
+}</span>
+</pre>
+		
+		</div>
+	</body>
+	<script>
+	(function() {
+		var files = document.getElementById('files');
+		var visible;
+		files.addEventListener('change', onChange, false);
+		function select(part) {
+			if (visible)
+				visible.style.display = 'none';
+			visible = document.getElementById(part);
+			if (!visible)
+				return;
+			files.value = part;
+			visible.style.display = 'block';
+			location.hash = part;
+		}
+		function onChange() {
+			select(files.value);
+			window.scrollTo(0, 0);
+		}
+		if (location.hash != "") {
+			select(location.hash.substr(1));
+		}
+		if (!visible) {
+			select("file0");
+		}
+	})();
+	</script>
+</html>
