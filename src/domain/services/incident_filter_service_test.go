@@ -54,31 +54,21 @@ func createTestIncidents() []entities.Incident {
 	id1, _ := valueobjects.NewIncidentID("incident-1")
 	id2, _ := valueobjects.NewIncidentID("incident-2")
 
-	incidents := []entities.Incident{
+	return []entities.Incident{
 		{
 			ID:                  id1,
 			ExternalDescription: "Issue in us-east1 zone",
 			Severity:            valueobjects.SeverityHigh,
-			AffectedProducts: []entities.Product{
-				{Title: "Compute Engine", ID: "compute"},
-			},
-			MostRecentUpdate: entities.Update{
-				UpdateStatus: "INVESTIGATING",
-			},
+			AffectedProducts:    []entities.Product{{Title: "Compute Engine", ID: "compute"}},
+			MostRecentUpdate:    entities.Update{UpdateStatus: "INVESTIGATING"},
 		},
 		{
 			ID:                  id2,
-			ExternalDescription: "Issue in europe-west1 zone",
+			ExternalDescription: "Resolved issue",
 			Severity:            valueobjects.SeverityLow,
 			EndTime:             &time.Time{},
-			AffectedProducts: []entities.Product{
-				{Title: "Cloud Storage", ID: "storage"},
-			},
-			MostRecentUpdate: entities.Update{
-				UpdateStatus: valueobjects.UpdateStatusAvailable,
-			},
+			AffectedProducts:    []entities.Product{{Title: "Cloud Storage", ID: "storage"}},
+			MostRecentUpdate:    entities.Update{UpdateStatus: valueobjects.UpdateStatusAvailable},
 		},
 	}
-
-	return incidents
 }

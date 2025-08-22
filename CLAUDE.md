@@ -81,3 +81,5 @@ The exporter provides a single metric `gcp_incidents` with severity-based values
 
 Labels include: id, status, product, description, uri, and optionally last_update.
 - Every feature should be developed used TDD strategy
+- The project uses hexagonal architecture
+- The project should follow the testing pyramids strategy practices

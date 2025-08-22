@@ -112,38 +112,3 @@ func TestIncident_GetSeverityValue(t *testing.T) {
 	}
 }
 
-func TestProduct(t *testing.T) {
-	product := Product{
-		Title: "Test Product",
-		ID:    "test-id",
-	}
-
-	if product.Title != "Test Product" {
-		t.Errorf("Product.Title = %v, want %v", product.Title, "Test Product")
-	}
-
-	if product.ID != "test-id" {
-		t.Errorf("Product.ID = %v, want %v", product.ID, "test-id")
-	}
-}
-
-func TestUpdate(t *testing.T) {
-	now := time.Now()
-	update := Update{
-		CreatedAt:    now,
-		Status:       "INVESTIGATING",
-		UpdateStatus: valueobjects.UpdateStatusAvailable,
-	}
-
-	if update.CreatedAt != now {
-		t.Errorf("Update.CreatedAt = %v, want %v", update.CreatedAt, now)
-	}
-
-	if update.Status != "INVESTIGATING" {
-		t.Errorf("Update.Status = %v, want %v", update.Status, "INVESTIGATING")
-	}
-
-	if update.UpdateStatus != valueobjects.UpdateStatusAvailable {
-		t.Errorf("Update.UpdateStatus = %v, want %v", update.UpdateStatus, valueobjects.UpdateStatusAvailable)
-	}
-}
